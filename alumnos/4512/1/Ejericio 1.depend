@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1427041497 source:/home/ribosoma/Desktop/codoblocks/Ejericio de Principio de año/main.c
+	<unistd.h>
+	<stdio.h>
+
