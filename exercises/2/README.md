@@ -14,6 +14,12 @@ $ make e2
 $ gcc -g -Wall -o e2 e2.c
 ```
 
+###Test
+
+```
+$ ls | ./e2
+```
+
 ###Preguntas
 
 - ¿Qué es make y para qué sirve?
