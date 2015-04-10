@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #define SIZE 80
 
@@ -19,9 +20,9 @@ int main(int argc, char **argv)
     void *memoria;
 
     memoria = memset(buff, 0, sizeof buff);
-    nchars = read(STDIN_FILENO, buff, sizeof buff);
-
-    process(memoria, nchars);
+    while ((nchars = read(STDIN_FILENO, buff, sizeof buff)) > 0) {
+        process(memoria, nchars);
+    }
 
     return 0;
 }
