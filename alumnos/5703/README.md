@@ -1,4 +1,4 @@
-Alumno: Germán Moyano \n
-Legajo: 5703 \n
-Carrera:Ing. Informática \n
-Año: 2015 \n
+Alumno: Germán Moyano
+Legajo: 5703
+Carrera:Ing. Informática
+Año: 2015
