@@ -26,6 +26,7 @@ Modo de uso
 --------------------------------------------------
 $ cat mensaje.txt | ./tp1
 $ cat mensaje.txt | ./tp1 -o mensaje-filtrado.txt
+		    ./tp1 -h ---> ayuda
 --------------------------------------------------
 
 
