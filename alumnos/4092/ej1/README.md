@@ -1,10 +1,9 @@
-##Ejercicio
+Ejercicio
 
 Remover los elementos duplicados de un arreglo.
 
 
-###Compilación
-
+Compilation
 ```
 gcc -g -Wall -o e1 e1.c
 ```

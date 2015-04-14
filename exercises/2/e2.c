@@ -1,26 +1,36 @@
 /**
- * Ejercicio 2) Encontrar el elemento que más ocurrencias tiene.
+ * Ejercicio 2) 
  */
 #include <unistd.h>
 #include <stdio.h>
+#include <fcntl.h>
+#include <string.h>
+#include <ctype.h>
 
-#define SIZE 14
+#define SIZE 80
 
-typedef struct result {
-    int key;
-    int count;
-} result_t;
+int process(char *input, int len);
 
 int main(int argc, char **argv)
 {
-    int sample[SIZE] = {0, 9, 8, 2, 2, 2, 5, 9, 5, 0, 3, 2, 3, 7};
-    int i, j;
+    int nchars = 0;
+    char buff[SIZE];
 
-    for (i = 0; i < SIZE; i++) {
-        printf("%d\n", sample[i]);
-        // TODO ...
-    }
+    // TODO ...
+
+    memset(buff, 0, sizeof buff);
+    nchars = read(STDIN_FILENO, buff, sizeof buff);
+
+    //printf("buff: %s\n", buff);
+    //printf("bytes: %d\n", nchars);
 
     return 0;
 }
 
+int process(char *input, int len)
+{
+    // TODO: convertir el input a mayúsculas (upper case)
+    // ...
+
+    return write(STDOUT_FILENO, input, len);
+}
