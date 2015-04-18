@@ -1,4 +1,4 @@
-OBJS = main.o leer.o filtro.o taman.o repl_str.o
+OBJS = main.o leer.o filtro.o repl_str.o
 CC = gcc
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
