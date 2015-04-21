@@ -7,7 +7,7 @@ int srch(char *input, int fd_o){
         char *palabras[]={"hola","como"};	//palabras a buscar		
 	
 	memset(out_buff,0,sizeof out_buff);
-	for(str1=strtok(input," ");str1!=NULL;str1=strtok(NULL," "),chk=0){
+	for(str1=strtok(input," \n\t,.");str1!=NULL;str1=strtok(NULL," "),chk=0){ 	//en strtok el 2° argumento son los delimitadores
 		for(i=0;i<2 ;i++){
 			if(((strcmp(str1,palabras[i]))==0)&&chk==0){	//comparo cada palabra para ver si las imprimo
 									//con valor devuelto por strcmp puedo dar tolerancia a la comparación
