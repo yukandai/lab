@@ -1,8 +1,9 @@
 FLAGS= -g -Wall
-TARGETS=tp1
+TARGETS=TP1
 CC:=gcc
 
 all: clean $(TARGETS)
+
 
 .PHONY:test
 test: $(TARGETS) 

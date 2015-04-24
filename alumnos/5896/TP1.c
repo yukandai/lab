@@ -7,12 +7,12 @@
 #include <string.h>
 #include <ctype.h>
 #define SIZE 80
-int process(char *input, int op, char *nombre);
+int process(char *input, int op, char *nombre,int len);
 int main(int argc, char **argv)
 {
 int nchars = 0;
 char buff[SIZE];
-int operacion;
+int operacion=0;
 extern char *optarg;
 extern int optind, opterr, optopt;
 
@@ -20,7 +20,7 @@ extern int optind, opterr, optopt;
 	if(argc==1){ 
 		while((nchars = read(STDIN_FILENO, buff, sizeof buff)) > 0){
 
-                                            process(buff,operacion,NULL);
+                                            process(buff,operacion,NULL,nchars);
                             
 			}	
 		}	
@@ -33,7 +33,7 @@ extern int optind, opterr, optopt;
 				while(
   
   				(nchars = read(STDIN_FILENO, buff, sizeof buff)) > 0){
-                                          process(buff,operacion,optarg);
+                                          process(buff,operacion,optarg,nchars);
                          		 }		
 
 				break;
@@ -49,7 +49,7 @@ extern int optind, opterr, optopt;
 		return 0;
 		}
 
-int process(char *input, int op, char *nombre)
+int process(char *input, int op, char *nombre, int len)
 {
   int i;
   int m;
@@ -60,28 +60,30 @@ int process(char *input, int op, char *nombre)
   int leido=0;
   memset(filtrado, 0, sizeof filtrado);
 
+  fd = open(nombre,O_RDWR|O_CREAT,0777);
    token = strtok(input, " \n\t");
    m = strcmp(token,palabra);
    if (m==0) {
-              token="(borrada)";
+              token="****";
              }  
    strcat(filtrado,token);
    strcat(filtrado," ");
     while( (token = strtok( NULL, " \n\t" )) != NULL ){
                                        i = strcmp(token,palabra);
                                        if (i==0){
-						token="(borrada)";
+						token="****";
 						}
 					strcat(filtrado,token);
 					strcat(filtrado," ");
 					}
 
     if(op==0){	//muestra por salida
-	write(STDOUT_FILENO, filtrado, sizeof filtrado);
+	write(STDOUT_FILENO, filtrado, strlen(filtrado));
 	}else{ //guarda en archivo
 	printf("el mensaje se ha filtrado a un archivo llamado %s \n", nombre);
-	fd = open(nombre,O_RDWR|O_CREAT,0777);
-	write(fd, filtrado, sizeof filtrado); 
+
+
+	write(fd, filtrado, strlen(filtrado)); 
     }
 return 0;
 }
