@@ -39,8 +39,8 @@ extern int optind, opterr, optopt;
 				break;
 				case 'h':
 			//	printf("estoy en h \n");
-				printf("Modo de uso:\n./TP1:\n Muestra mensaje filtrado en pantalla.\n");
-				printf("./tp1 -o mensajefiltrado.txt:\nGuarda mensaje filtrado en un archivo llamado mensajefiltrado.txt\n");
+				printf("Modo de uso:\n./TP1: (make test1)\n Muestra mensaje filtrado en pantalla.\n");
+				printf("./tp1 -o mensajefiltrado.txt: (make test2)\nGuarda mensaje filtrado en un archivo llamado mensajefiltrado.txt\n");
 				break;
 
 				}
