@@ -2,25 +2,30 @@
 
 int srch(char *input, int fd_o){
 	char *str1;				//puntero para el TOKEN
-	int i,chk=0;
+	int i,pt=0,chk=0;
 	char out_buff[1024]; 			//buffer de la salida filtrada
-        char *palabras[]={"hola","como"};	//palabras a buscar		
-	
+        char *palabras[]={"hola","como"};	//palabras a buscar
+	char point[1024];			//para recobrar separadores
+
 	memset(out_buff,0,sizeof out_buff);
-	for(str1=strtok(input," \n\t,.");str1!=NULL;str1=strtok(NULL," "),chk=0){ 	//en strtok el 2° argumento son los delimitadores
-		for(i=0;i<2 ;i++){
+	memset(point,0,sizeof point);
+	strcpy(&point[0],input);		//input se destruye cuando para por strtok, asi que la copio
+
+	for(str1=strtok(input," \n\t,.");str1!=NULL;str1=strtok(NULL," \n\t,."),chk=0){ 	//en strtok el 2° argumento son los delimitadores
+		for(i=0;i<2;i++){
 			if(((strcmp(str1,palabras[i]))==0)&&chk==0){	//comparo cada palabra para ver si las imprimo
-									//con valor devuelto por strcmp puedo dar tolerancia a la comparación
-				//printf("palabra filtrada:%s\n",palabras[i]);
+			//	printf("palabra filtrada:%s\n",palabras[i]);
 				chk=1;
+
 			}
 		}
-		if(chk!=1){						//sino esta filtrada la agrago al buff de salida	
-			strcat(out_buff,str1);				
-			strcat(out_buff," ");				//agrego un espacio ya que strtok los quita
+		for( ;str1[0]!=point[pt];pt++){				//for para recobrar el separador de la cadena original
+			strncat(out_buff,&point[pt],1);			
 		}
+		pt=pt+(strlen(str1));					//puntero para dejar marcado el siguiente separador
+			
+		if(chk!=1){strcat(out_buff,str1);}			//si no esta filtrada la agrego al buff de salida
 	}
-	if(fd_o!=-1)	write (fd_o,out_buff,strlen (out_buff));
-	else if(fd_o==-1) write (STDOUT_FILENO,out_buff,sizeof out_buff);
+	write (fd_o,out_buff,sizeof out_buff);
 	return 0;
 }

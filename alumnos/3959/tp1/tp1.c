@@ -12,7 +12,7 @@ int main (int argc, char *argv[]){
 
 	if(argc==1){
 		while((nchars = read(STDIN_FILENO,buff,sizeof buff))>0){
-			srch(buff,-1);//buscar desde STDOUT
+			srch(buff,1);//buscar desde STDOUT
 		}
 	}
 	else{
