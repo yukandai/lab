@@ -1,4 +1,4 @@
-##Información
+##Carpeta de ejercicios adicionales
 
 ```
 Alumno: Germán Moyano
@@ -9,7 +9,7 @@ Legajo: 5703
 ```
 
 ```
-Carrera:Ing. Informática
+Carrera: Ing. Informática
 ```
 
 ```
