@@ -1,0 +1,110 @@
+
+|¿Qué es make y para qué sirve? 
+
+	'make' es una herramienta de GNU que genera ejecutables y otros tipos de archivos no-fuente (archivos output) de un programa, a partir de los archivos fuentes (archivos input) de ese 		programa. Es decir, sirve para crear y mantener programas o grupos de programas a partir de archivos fuentes.
+
+	El propósito de make es determinar automaticamente qué partes de un programa necesitan ser recompiladas, y correr los comandos necesarios para hacerlo.
+	Make se puede usar para cualquier lenguaje de programación, y en general para cualquier tarea que requiera actualizar ciertos archivos (output) a partir de otros (input), cuando estos 	otros cambian.
+	
+	'Make' necesita que haya un archivo 'makefile' creado, que le indique las relaciones entre los archivos de un programa y los comandos para actualizar cada archivo.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+|¿Qué diferencia hay entre compilar con make y hacerlo con gcc?
+
+	En realidad, 'make' no es un compilador, no compila por sí solo. Llama, siguiendo las reglas que se le son asignadas en el 'makefile', a GCC, que es un compilador.
+	No se podría compilar un programa solo con 'make' y sin un compilador; sí se podría realizar la tarea contraria: compilar un programa solo con GCC y sin 'make'. 
+
+	Lo que hace 'make' es facilitarnos la tarea: con GCC debemos compilar y linkear cada archivo nosotros mismos, dando lugar a errores y/o mucho trabajo. En cambio, con un 'makefile' 		correcto, la herramienta 'make' hace todo esto automáticamente, generando, por ejemplo en un programa C, nuevos ejecutables cada vez que los archivos fuentes *.c son modificados.
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+|¿Para qué sirve el archivo Makefile?
+
+	El archivo 'makefile', mencionado anteriormente, es en el que están especificadas las reglas que debe seguir la herramienta 'make', a la hora de correr sobre un programa en particular. La 		sintaxis general de los archivos 'makefile' es:
+
+	destino:  dependencias ...
+		  comandos 	
+		  ...
+
+	Por ejemplo, para compilar un pequeño programa "Hola Mundo" en C, tenemos una carpeta con 2 archivos: 'hola_mundo.c' y 'makefile'. Dentro del makefile podríamos escribir:
+
+			_____________________________________________________________________________
+		       |									     |
+		       |CC= gcc									     |	
+		       |DEBUG = -g								     |						     
+		       |									     |
+		       |hola: hola_mundo.c 							     |
+		       |	$(CC) $(DEBUG) hola_mundo.c -o hola 				     |
+		       |									     |
+		       |_____________________________________________________________________________|
+
+	lo cual nos daría por resultado un archivo ejecutable llamado "hola", con solo ejecutar 'make' en el directorio del programa. También, como hemos indicado que el archivo 'hola' depende de 		'hola_mundo.c', cada vez que éste cambie, make lo compilará nuevamente y generará un nuevo archivo ejecutable, que reemplazará al anterior.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+|¿Para que sirven las opciones -g y -Wall?
+
+	La opción -g es una de las opciones que ofrece GCC para el correcto debuggeo de un programa: genera información de debug en el formato nativo del sistema operativo que se corre (p.e. COFF, 		stabs, etc.). Esta información puede ser usada por GDB, por ejemplo.
+
+	-Wall es una opción de advertencias (warnings), que combina varias otras opciones. Se resumen estas otras opciones en la siguiente lista (traducida del manual de GCC):
+
+	-w
+	Inhibe todos los mensajes de advertencia.
+
+	-Wno-import
+	Inhibe mensajes de advertencia relacionados con el uso de `#import'.
+
+	-Wchar-subscripts
+	Advierte si el subíndice de un arreglo es del tipo char.
+
+	-Wcomment
+	Advierte sobre posibles errores en los comentarios, como dos '/*' en un solo comentario.
+
+	-Wformat
+	Chequea llamadas a printf, scanf, etc, con el fin de asegurarse de que los argumentos que se pasan sean del tipo adecuado para la cadena constante de formato que se especifica.
+
+	-Wimplicit-int
+	Advierte si una declaración no especifica tipo.
+
+	-Wimplicit-function-declaration
+	-Werror-implicit-function-declaration
+	Advierte (o devuelve un error) cuando una función es usada antes de ser declarada.
+
+	-Wimplicit
+	Igual a `-Wimplicit-int' y `-Wimplicit-function-declaration'
+
+	-Wmain
+	Advierte si los tipos de datos de 'main' es sospechoso. 'main' debería ser una función con 'ligamiento' externo (external linkage), debería devolver un entero y tomar 0, 2 o 3 argumentos 		de un tipo adecuado.
+
+	-Wmultichar
+	Advierte si hay una constante de múltiplos caractéres en uso, p.e. 'FOOF'
+
+	-Wparentheses
+	Advierte si se ha omitido un paréntesis en ciertos contextos.
+
+	-Wreturn-type
+	Advierte sobre los valores de devolución de funciones. P.e. si una función no devuelve ningún valor pero sí está definida para devolverlo.
+
+
+	-Wswitch
+	Advierte si una sentencia switch tiene una lista de elementos a evaluar y alguno de los elementos de la lista no tiene su correspondiente case.
+
+	-Wtrigraphs
+	Advierte si se encuentran trígrafos.
+	
+	-Wunused
+	Advierte si una variable es declarada pero no usada, si una función se declara 'static' pero no se define, si una etiqueta se declara pero no se usa, y si una declaracion computa un 		resultado que explícitmanente no es usado	
+
+	
+	-Wuninitialized
+	Advierte si una variable automática es usada sin haber sido inicializada primero.
+	
+	-Wunknown-pragmas
+	Advierte si se encuentra una directiva #pragma que GCC no entiende. 
+   
+
+
+	
