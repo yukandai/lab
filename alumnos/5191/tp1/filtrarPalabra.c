@@ -13,17 +13,15 @@ char *filtrarPalabra (char *palabra){
 	//printf("cantidad de caracteres del mensaje %d\n",(int)strlen(mensaje));
 
 
-if  ((strcmp(palabra,palabrafiltrada1) == 0) || (strcmp(palabra, palabrafiltrada2) == 0) || (strcmp(palabra,palabrafiltrada3) == 0)) {
-	flag = 1;
-}
+	if  ((strncmp(palabra,palabrafiltrada1,strlen(palabra)) == 0) || (strncmp(palabra, palabrafiltrada2,strlen(palabra)) == 0) || (strncmp(palabra,palabrafiltrada3,strlen(palabra)) == 0)) {
+		flag = 1;
+	}
 
 	if (flag){
 		//printf ("flag: %d\n",flag);
 		palabra = "";
 	}
- 
-	
-
-return palabra;
+ 	
+	return palabra;
 
 }

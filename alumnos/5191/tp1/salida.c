@@ -2,7 +2,7 @@
 
 void nombreSalida(char **nombre){
 
-	*nombre = malloc( sizeof( char) * strlen( optarg));
-	strcpy( *nombre, optarg);
+	*nombre = malloc(sizeof(char) * strlen(optarg));
+	strncpy(*nombre, optarg, strlen(optarg));
 	
 }

@@ -14,6 +14,7 @@
 	void Ayuda();	
 	char *filtrarPalabra(char *palabra);
 	void mensajeFiltrado(char *archivo, char *mensaje);
+	
 #endif
 
 
