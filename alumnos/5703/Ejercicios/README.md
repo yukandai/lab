@@ -1,4 +1,4 @@
-##Información
+##Carpeta de ejercicios adicionales
 
 ```
 Alumno: Germán Moyano
