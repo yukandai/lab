@@ -1,0 +1,1 @@
+escribir,cat,Aprender,mensajes,desarrollar,programa
