@@ -7,16 +7,10 @@
 
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 #define SIZE 14
 #define N 10
-
-void blank(int *ord){
-   int i;
-   for(i=0;i<N;i++){
-    	ord[i]=0;
-   }
-}
 
 void noRepetidos(int *ord){
     int i;
@@ -43,7 +37,7 @@ int main(int argc, char **argv)
     int ord[N];
     int i,val;
 
-    blank(ord);				//Iniciar vector en 0
+    memset(ord,0,sizeof ord);				//Iniciar vector en 0
  
     for (i = 0; i < SIZE; i++) {	//recorremos el vector
         val=sample[i];			
