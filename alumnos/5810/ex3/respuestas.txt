@@ -1,0 +1,30 @@
+fork1:
+  -Se crearían 8 procesos en total, ya que con el fork se crea una copia del proceso que continua ejecutando apartir de ese fork.
+
+  -Jerarquía:
+    fork1 { fork2 { fork3 {
+          { fork4 { fork5 {
+          
+    fork6 { fork7 {
+  
+    fork8 {
+
+
+fork2:
+  -El valor de saldo quedaría 900 al final de la ejecución ya que el fork ejecutaría esta parte del codigo:
+    if (pid == 0) {
+        saldo = saldo + 100;
+        return 0;
+    }
+
+    saldo = saldo - 100;
+    
+    y al terminar el fork, solo se ejecutaría la ultima parte (saldo = saldo - 100;) ya que el pid es distinto 
+    de 0 porque el child ya no estaría ejecutandose.
+  
+  
+  -No entiendo bien a que se refiere al orden de ejecución, pero si por ejemplo pusiera la parte de "saldo = saldo - 100;"
+    antes del fork, el resultado sería 1000 y no 900.
+    
+    
+  
