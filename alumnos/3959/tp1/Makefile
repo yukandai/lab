@@ -1,6 +1,6 @@
 CFLAGS= -g -Wall
 TARGETS=tp1
-CC:=gcc
+CC=gcc
 
 all: clean $(TARGETS)
 
