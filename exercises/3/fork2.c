@@ -1,7 +1,9 @@
 /**
- * ¿Qué valor tiene la variable "saldo" al finalizar los dos procesos? 
+ * ¿Qué valor tiene la variable "saldo" al finalizar los dos procesos?
+ * Rta:
  *
  * ¿Depende del orden de ejecución?
+ * Rta:
  */
 #include <stdio.h>
 #include <unistd.h>
