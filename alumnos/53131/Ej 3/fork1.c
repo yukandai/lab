@@ -12,9 +12,7 @@
     se crea el proceso 4916; al ejecutar fork() nuevamente, tanto el proceso 4915 como el 4916
     crean un proceso hijo--> el 4917 (hijo de 4916) y el 4919 (hijo de 4916). Así sucede también
     con el tercer fork(), creandose 4 procesos más, uno por cada proceso existente.
-
     La jerarquía, en este ejemplo, queda de la siguiente manera:
-
                         4915
              ____________|_________________
             |            |                 |
