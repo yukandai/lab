@@ -1,0 +1,8 @@
+Fork3:
+  Los procesos hijo quedan en estado zombie ya que terminaron su ejecución normal pero el proceso padre todavía 
+  no leyó los respectivos valores de salida de dichos procesos, por lo tanto los hijos todavía tienen una 
+  entrada en la tabla de procesos por más que hayan terminado su ejecución.
+  
+Fork4:
+  El proceso padre cambia porque el hijo sigue en sleep despues de que el padre termina de ejecutar por lo que queda
+  huérfano y lo adopta el init del usuario actual. Siendo el nuevo PPID el PID de dicho init.
