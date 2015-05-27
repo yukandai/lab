@@ -1,0 +1,65 @@
+COMPUTACION II
+==============
+
+
+TP2
+---
+
+Entrega parcial:	02/06/2015
+
+Entrega final:		09/06/2015
+
+
+Requerimientos:
+~~~~~~~~~~~~~~~
+
+Desarrollar una aplicación cuyo proceso padre lance un hijo. El proceso padre leerá del la
+entrada estandar (stdin) y enviará lo que lee por un pipe al proceso hijo. El proceso hijo
+deberá esperar el envío de una señal (signal: SIGUSR1 y SIGUSR2) para saber cómo proceder. En
+el caso de recibir la señal SIGUSR1 deberá aplicar la función rot13 al texto leído del pipe, y
+enviar el resultado por otro pipe al padre. En caso de recibir la señal SIGUSR2, el proceso 
+hijo deberá lanzar otro proceso, el cual filtrará el texto recibido del padre utilizando la
+función de filtrado de palabras que se utilizó en el tp1. Al final este proceso, el resultado
+deberá ser enviado al proceso "abuelo", o sea, al primer proceso. El primer proceso es el que
+deberá mostrar el resultado del procesamiento de texto por la salida estandar (stdout).
+
+La aplicación deberá contener al menos los siguientes archivos: main.c, hijo.h, hijo.c, nieto.h,
+nieto.c, parser.h, parser.c.
+
+
+Modo de uso
+~~~~~~~~~~~
+--------------------------------------------------
+./tp2 -p <palabras-a-filtrar-separadas-por-coma>
+
+$ cat mensaje.txt | ./tp2 -p hola,mono,meme
+
+$ ls -l | ./tp2 -p hola,mono,meme
+--------------------------------------------------
+
+
+Objetivos
+~~~~~~~~~
+
+* Desarrollar un programa en C descomoniéndolo en varios módulos.
+
+* Utilizar la redirección de la entrada y salida.
+
+* Práctica sobre el uso de pipes.
+
+* Ejercitar el uso de open(), read() y write().
+
+* Ejercitar el uso de Makefile.
+
+* Ejercitar uso de señales (signals).
+
+
+Tips
+~~~~
+
+* Funciones para el manejo de cadenas de caracteres en la biblioteca string.h
+* getopt() para manejar los argumentos que recibe un programa
+* man 2 signal
+* man 7 signal
+
+
