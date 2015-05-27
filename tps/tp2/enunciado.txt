@@ -26,6 +26,9 @@ deberá mostrar el resultado del procesamiento de texto por la salida estandar (
 La aplicación deberá contener al menos los siguientes archivos: main.c, hijo.h, hijo.c, nieto.h,
 nieto.c, parser.h, parser.c.
 
+La función main() deberá contener como máximo 40 líneas de código sin contar espacios en blanco
+y comentarios.
+
 
 Modo de uso
 ~~~~~~~~~~~
