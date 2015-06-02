@@ -23,13 +23,13 @@ int main(int argc, char *argv[]){
 		case 0:
 		      	signal(SIGUSR1,handlerHijo); 	//signal n° 10
 			signal(SIGUSR2,handlerNieto);	//signal n° 12
-			pause();	
+			pause(); 			//pausa hasta reibir la señal	
 			return 0;
 		default:
 			close(fd_ph[P_RD]);
 			close(fd_hp[P_WR]);
 			while((n=read(STDIN_FILENO,buff,sizeof buff))>0){
-				write(fd_ph[P_WR],buff,n);
+				write(fd_ph[P_WR],buff,n);	
 				r=read(fd_hp[P_RD],buff,sizeof buff);
 				write(STDOUT_FILENO,buff,r);		
 			}

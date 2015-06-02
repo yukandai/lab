@@ -5,7 +5,7 @@
 #include "nieto.h"
 #include "srch.h"
 
-void handlerNieto(int sig){	//manejador de la señal para nieto
+void handlerNieto(int sig){	//manejador de la señal para crear el nieto
 	char buff[BUF_SIZE];
 	int n;
 	close(fd_ph[P_WR]);
