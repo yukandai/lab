@@ -1,5 +1,5 @@
 //@anaquinpm
-//Programa que procesa el STDIN mediante un hijo o nieto segun las SEÑALES que reciba el HIJO.
+//Procesamiento de STDIN mediante un hijo o nieto segun las SEÑALES que reciba el HIJO.
 //El padre recibe los datos procesados para mostrarlo por STDOUT.
 
 #include <unistd.h>
@@ -50,8 +50,6 @@ int main(int argc, char *argv[]){
 				printf("Modo de uso:\t cat mensaje.txt | ./tp2 -o <palabras,a,filtrar>\n");
 				return 0;
 		}
-
 	}
-
 	exit(EXIT_SUCCESS);
 }
