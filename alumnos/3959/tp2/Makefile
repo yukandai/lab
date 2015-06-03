@@ -4,7 +4,7 @@ CC=gcc
 
 all: clean $(TARGETS)
 
-tp2: main.c hijo.c nieto.c srch.c 
+tp2: main.c hijo.c nieto.c srch.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 .PHONY:test
@@ -13,11 +13,11 @@ test: $(TARGETS)
 
 .PHONY:test2
 test2:	$(TARGETS)
-	ls -l | ./tp2 -p hola,mono,meme
+	ls -l | ./tp2 -p hola,como,meme
 
 .PHONY:test3
 test3:	$(TARGETS)
-	cat mensaje.txt | ./tp2 -p hola,mono,meme
+	cat mensaje.txt | ./tp2 -p hola,como,meme
 
 .PHONY: clean
 clean:
