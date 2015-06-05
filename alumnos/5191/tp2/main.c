@@ -3,17 +3,23 @@
 
 int main (int argc, char **argv){
 
-	int tuberia_padre_escribe_hijo_lee[2]; // [0] --> read   [1] --> write
-	int tuberia_padre_lee_hijo_escribe[2];
+	int tuberia_padre_hijo[2]; // pipe1 -- [0] --> read   [1] --> write
+	int tuberia_hijo_padre[2]; // pipe2
+//	int tuberia_nieto_hijo[2]; // pipe3
 
-	if (pipe(tuberia_padre_escribe_hijo_lee) != 0){
-		perror ("Error en el pipe padre escribe - hijo lee");
+	if (pipe(tuberia_padre_hijo) != 0){
+		perror ("Error en el pipe padre - hijo");
 		return -1;
 	}
 
-	if (pipe(tuberia_padre_lee_hijo_escribe) != 0){
-		perror ("Error en el pipe padre lee - hijo escribe");
+	if (pipe(tuberia_hijo_padre) != 0){
+		perror ("Error en el pipe hijo - padre");
+		return -1;
 	}
+/*	if (pipe(tuberia_nieto_hijo) != 0){
+		perror ("Error en el pipe nieto - hijo");
+		return -1;
+	}*/
 	
 	switch(fork()){
 		case -1: // error fork
@@ -22,19 +28,19 @@ int main (int argc, char **argv){
 
 		case 0: // proceso hijo
 						
-			close(tuberia_padre_escribe_hijo_lee[1]); // cierro la tuberia para escribir
-			close(tuberia_padre_lee_hijo_escribe[0]); // cierro la tuberia para leer		
+			close(tuberia_padre_hijo[1]); // cierro escritura
+			close(tuberia_hijo_padre[0]); // cierro lectura		
 //			printf("hijoo\n");
-			funcionHijo(tuberia_padre_escribe_hijo_lee[0],tuberia_padre_lee_hijo_escribe[1]);
+			funcionHijo(tuberia_padre_hijo[0],tuberia_hijo_padre[1]);
 			return 2;
 	
 
 	//*************************PADRE*********************************//		
 		default:	// proceso padre
 
-			close(tuberia_padre_escribe_hijo_lee[0]); // cierro lectura
-            close(tuberia_padre_lee_hijo_escribe[1]); // cierro escritura
-			funcionPadre(tuberia_padre_escribe_hijo_lee[1],tuberia_padre_lee_hijo_escribe[0]);
+			close(tuberia_padre_hijo[0]); // cierro lectura
+            close(tuberia_hijo_padre[1]); // cierro escritura
+			funcionPadre(tuberia_padre_hijo[1],tuberia_hijo_padre[0]);
 //			printf ("hola soy el padre\n");
      
 
