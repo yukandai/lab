@@ -30,9 +30,9 @@ void nieto (int signo){
 		//aplicando filtrado de palabras
 		filtrar();	
 		//fin de filtrado y enviando al abuelo
-//		write(hap[PIPE_WR],filtrado,strlen(filtrado));//envio al abuelo
-//		close(han[PIPE_RD]);
-//		close(hap[PIPE_WR]);
+		//		write(hap[PIPE_WR],filtrado,strlen(filtrado));//envio al abuelo
+		//		close(han[PIPE_RD]);
+		//		close(hap[PIPE_WR]);
 	}
 
 }

@@ -7,20 +7,20 @@
 #include "parser.h"
 #include "nieto.h"
 /*void palabras(char *palabras);
-char palabra1[50];
-char palabra2[50];
-char palabra3[50];
-char *ptr;
+  char palabra1[50];
+  char palabra2[50];
+  char palabra3[50];
+  char *ptr;
 
-int k=1;
+  int k=1;
 
-*/
+ */
 
 int main (int argc, char *const argv[])
 {
-int operacion=0;
-extern char *optarg;
-extern int optind, opterr, optopt;
+	int operacion=0;
+	extern char *optarg;
+	extern int optind, opterr, optopt;
 
 	pipe(pah);
 	pipe(hap);
@@ -46,23 +46,23 @@ extern int optind, opterr, optopt;
 		return -1;
 	}
 
-/*       while((operacion = getopt( argc, argv, "p")) >= 0){
-                          switch (operacion){
-  
-  
-                                  case 'p':
-                                  printf("estoy en p %s \n",argv[2]);
-                                palabras(); 
-  
-                                  
-  
-                                  break;
-                      
-  
-                                  }
-  
-                                                          } */
-		//hijo
+	/*       while((operacion = getopt( argc, argv, "p")) >= 0){
+		 switch (operacion){
+
+
+		 case 'p':
+		 printf("estoy en p %s \n",argv[2]);
+		 palabras(); 
+
+
+
+		 break;
+
+
+		 }
+
+		 } */
+	//hijo
 	if (pid == 0){
 
 		printf("soy el hijo \n");
@@ -81,23 +81,23 @@ extern int optind, opterr, optopt;
 	}
 
 	//padre	
-       while((operacion = getopt( argc, argv, "p")) >= 0){
-                          switch (operacion){
-  
-  
-                                  case 'p':
-                                  printf("palabras a filtrar %s \n",argv[2]);
-                                palabras(argv[2]); 
-  
-                                  
-  
-                                  break;
-                      
-  
-                                  }
-  
-                                                          } 
-	
+	while((operacion = getopt( argc, argv, "p")) >= 0){
+		switch (operacion){
+
+
+			case 'p':
+				printf("palabras a filtrar %s \n",argv[2]);
+				palabras(argv[2]); 
+
+
+
+				break;
+
+
+		}
+
+	} 
+
 
 	close(pah[PIPE_RD]);
 	close(hap[PIPE_WR]);
@@ -116,35 +116,35 @@ extern int optind, opterr, optopt;
 }
 
 /*void palabras(char *palabras){
-char s2[4] = ",";
- 
+  char s2[4] = ",";
+
   memset(palabra1, 0, sizeof palabra1);
   memset(palabra2, 0, sizeof palabra2);
   memset(palabra3, 0, sizeof palabra3);
-   //  printf( "s1=%s\n", argv[2] );
-  
-     ptr = strtok( palabras, s2 );    // Primera llamada => Primer token
-   //  printf( "%s\n", ptr );
-          strcpy(palabra1,ptr);
-     while( (ptr = strtok( NULL, s2 )) != NULL ){    // Posteriores llamadas
- //      printf( "%s\n", ptr );
-  
-          k++;
-      if(k==2){
-           strcpy(palabra2,ptr);
-  }
-  
-  if(k==3){
-           strcpy(palabra3,ptr);
-  }
-  
-  }
-  
-  printf (" palabra1: %s \n",palabra1);
-  
-  printf (" palabra2: %s \n",palabra2);
-  printf (" palabra3: %s \n",palabra3);
-  
+//  printf( "s1=%s\n", argv[2] );
+
+ptr = strtok( palabras, s2 );    // Primera llamada => Primer token
+//  printf( "%s\n", ptr );
+strcpy(palabra1,ptr);
+while( (ptr = strtok( NULL, s2 )) != NULL ){    // Posteriores llamadas
+//      printf( "%s\n", ptr );
+
+k++;
+if(k==2){
+strcpy(palabra2,ptr);
+}
+
+if(k==3){
+strcpy(palabra3,ptr);
+}
+
+}
+
+printf (" palabra1: %s \n",palabra1);
+
+printf (" palabra2: %s \n",palabra2);
+printf (" palabra3: %s \n",palabra3);
 
 
-		}*/
+
+}*/

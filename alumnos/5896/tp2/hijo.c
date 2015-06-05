@@ -24,7 +24,7 @@ void manejador (int signo){
 	//Si es SIGUSR2 entonces
 	else
 	{
-	nieto(signo);
+		nieto(signo);
 	}
 
 }
