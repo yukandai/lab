@@ -1,0 +1,1 @@
+Hola soy el mensaje que tiene que filtrar el proceso nieto si le mandan la señal sigusr2. Bueno chau. 
