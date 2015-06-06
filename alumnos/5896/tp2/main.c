@@ -63,11 +63,11 @@ int main (int argc, char *const argv[])
 	}
 
 	//padre
-sleep(2);	
+	sleep(2);	
 	close(pah[PIPE_RD]);
 	close(hap[PIPE_WR]);
-printf("Si la señal es SIGUSR1, al mensaje entrante se le aplicara ROT13\n");  
-printf("Si la señal es SIGUSR2, al mensaje entrante se le filtrara las palabras %s,%s,%s\n",palabra1f,palabra2f,palabra3f);  
+	printf("Si la señal es SIGUSR1, al mensaje entrante se le aplicara ROT13\n");  
+	printf("Si la señal es SIGUSR2, al mensaje entrante se le filtrara las palabras %s,%s,%s\n",palabra1f,palabra2f,palabra3f);  
 	leido=read(STDIN_FILENO,mensaje,sizeof mensaje);
 	write(pah[PIPE_WR],mensaje,leido);
 

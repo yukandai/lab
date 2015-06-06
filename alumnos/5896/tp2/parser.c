@@ -32,17 +32,17 @@ char  *palabras(char *palabras, int cont){
 
 	if(cont==1){
 		p=palabra1;
-	//	printf (" palabra1 de la funcion palabras: %s \n",p);
+		//	printf (" palabra1 de la funcion palabras: %s \n",p);
 		return p;
 	}
 	if(cont==2){
 		p=palabra2;
-	//	printf (" palabra2 de la funcion palabras: %s \n",p);
+		//	printf (" palabra2 de la funcion palabras: %s \n",p);
 		return p;
 	}
 	if(cont==3){
 		p=palabra3;
-	//	printf (" palabra3 de la funcion palabras: %s \n",p);
+		//	printf (" palabra3 de la funcion palabras: %s \n",p);
 		return p;
 	}
 }
@@ -54,9 +54,9 @@ char  *palabras(char *palabras, int cont){
 
 void filtrar()
 {
-//	printf (" palabra1: %s \n",palabra1f); 
-//	printf (" palabra2: %s \n",palabra2f);
-//	printf (" palabra3: %s \n",palabra3f);
+	//	printf (" palabra1: %s \n",palabra1f); 
+	//	printf (" palabra2: %s \n",palabra2f);
+	//	printf (" palabra3: %s \n",palabra3f);
 
 	int m,n,p;
 	char filtrado[1024];
