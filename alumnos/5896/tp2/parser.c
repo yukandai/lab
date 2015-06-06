@@ -6,23 +6,18 @@
 char palabra1[50];
 char palabra2[50];
 char palabra3[50];
-char *ptr;
-
 
 int k=1;
-void palabras(char *palabras){
+char  *palabras(char *palabras, int cont){
+	char *ptr;
+	char *p;
 	char s2[4] = ",";
 
-	//   memset(palabra1, 0, sizeof palabra1);
-	//   memset(palabra2, 0, sizeof palabra2);
-	//   memset(palabra3, 0, sizeof palabra3);
-	//  printf( "s1=%s\n", argv[2] );
 
 	ptr = strtok( palabras, s2 );    // Primera llamada => Primer token
-	//  printf( "%s\n", ptr );
 	strcpy(palabra1,ptr);
+
 	while( (ptr = strtok( NULL, s2 )) != NULL ){    // Posteriores llamadas
-		//      printf( "%s\n", ptr );
 
 		k++;
 		if(k==2){
@@ -35,14 +30,23 @@ void palabras(char *palabras){
 
 	}
 
-	printf (" palabra1: %s \n",palabra1);
-
-	printf (" palabra2: %s \n",palabra2);
-	printf (" palabra3: %s \n",palabra3);
-
-
-
+	if(cont==1){
+		p=palabra1;
+	//	printf (" palabra1 de la funcion palabras: %s \n",p);
+		return p;
+	}
+	if(cont==2){
+		p=palabra2;
+	//	printf (" palabra2 de la funcion palabras: %s \n",p);
+		return p;
+	}
+	if(cont==3){
+		p=palabra3;
+	//	printf (" palabra3 de la funcion palabras: %s \n",p);
+		return p;
+	}
 }
+
 
 
 
@@ -50,31 +54,28 @@ void palabras(char *palabras){
 
 void filtrar()
 {
-	//     int i;
-	printf (" palabra1: %s \n",palabra1);
-
-	printf (" palabra2: %s \n",palabra2);
-	printf (" palabra3: %s \n",palabra3);
+//	printf (" palabra1: %s \n",palabra1f); 
+//	printf (" palabra2: %s \n",palabra2f);
+//	printf (" palabra3: %s \n",palabra3f);
 
 	int m,n,p;
 	char filtrado[1024];
-	//     char palabra[1024]="hola";
 	char *token;
 	memset(filtrado, 0, sizeof filtrado);
 
 	token = strtok(buff, " \n\t");
-	m = strcmp(token,palabra1);
-	n = strcmp(token,palabra2);
-	p = strcmp(token,palabra3);
+	m = strcmp(token,palabra1f);
+	n = strcmp(token,palabra2f);
+	p = strcmp(token,palabra3f);
 	if (m==0 || n==0 || p==0) {
 		token="****";
 	}
 	strcat(filtrado,token);
 	strcat(filtrado," ");
 	while( (token = strtok( NULL, " \n\t" )) != NULL ){
-		m = strcmp(token,palabra1);
-		n = strcmp(token,palabra2);
-		p = strcmp(token,palabra3);
+		m = strcmp(token,palabra1f);
+		n = strcmp(token,palabra2f);
+		p = strcmp(token,palabra3f);
 		if (m==0 || n==0 || p==0){
 			token="****";
 		}
@@ -82,7 +83,6 @@ void filtrar()
 		strcat(filtrado," ");
 	}
 
-	printf (" %s, %s, %s filtradas \n",palabra1,palabra2,palabra3);
 
 
 
@@ -104,29 +104,24 @@ void ROT13(){
 			if(c >='A' && c <='Z')
 			{
 				if((e = c + 13) <= 'Z')
-					// putchar(e);
 					buff[j]=e;
 				else
 				{
 					e = c - 13;
-					//        putchar(e);
 					buff[j]=e;
 				}
 			}
 			else if(c >='a' && c <='z')
 			{
 				if((e= c + 13) <= 'z')
-					//   putchar(e);
 					buff[j]=e;
 				else
 				{
 					e = c - 13;
-					//   putchar(e);
 					buff[j]=e;
 				}
 			}
 			else
-				//  putchar(c);
 				buff[j]=c;
 		}
 	}

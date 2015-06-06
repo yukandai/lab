@@ -6,16 +6,7 @@
 #include "hijo.h"
 #include "parser.h"
 #include "nieto.h"
-/*void palabras(char *palabras);
-  char palabra1[50];
-  char palabra2[50];
-  char palabra3[50];
-  char *ptr;
-
-  int k=1;
-
- */
-
+int contador=1;
 int main (int argc, char *const argv[])
 {
 	int operacion=0;
@@ -25,7 +16,7 @@ int main (int argc, char *const argv[])
 	pipe(pah);
 	pipe(hap);
 	pipe(han);
-	printf("soy %d hijo de %d\n",getpid(),getppid());		
+	printf("soy %d (main) \n",getpid());		
 	int pid,leido;
 	char mensaje[100],buff[100];
 	if (pipe(hap) < 0) {
@@ -46,27 +37,19 @@ int main (int argc, char *const argv[])
 		return -1;
 	}
 
-	/*       while((operacion = getopt( argc, argv, "p")) >= 0){
-		 switch (operacion){
+	while((operacion = getopt( argc, argv, "p")) >= 0){
+		switch (operacion){
+			case 'p':
+				palabra1f = palabras(argv[2],1); 
+				palabra2f = palabras(argv[2],2);      
+				palabra3f = palabras(argv[2],3);      
+				break;
+		}
 
-
-		 case 'p':
-		 printf("estoy en p %s \n",argv[2]);
-		 palabras(); 
-
-
-
-		 break;
-
-
-		 }
-
-		 } */
+	} 
 	//hijo
 	if (pid == 0){
-
-		printf("soy el hijo \n");
-		printf("soy  el hijo %d esperando la señal!\n",getpid());
+		printf("soy  el hijo %d y mi padre es %d estoy esperando la señal!\n",getpid(),getppid());
 		if (signal(SIGUSR1, manejador) == SIG_ERR) {
 			perror("error en la señal SIGUSR1");
 			exit(EXIT_FAILURE);
@@ -75,33 +58,16 @@ int main (int argc, char *const argv[])
 			perror("error en la señal SIGUSR2");
 			exit(EXIT_FAILURE);
 		}
-
 		for ( ; ; )
 			pause();
 	}
 
-	//padre	
-	while((operacion = getopt( argc, argv, "p")) >= 0){
-		switch (operacion){
-
-
-			case 'p':
-				printf("palabras a filtrar %s \n",argv[2]);
-				palabras(argv[2]); 
-
-
-
-				break;
-
-
-		}
-
-	} 
-
-
+	//padre
+sleep(2);	
 	close(pah[PIPE_RD]);
 	close(hap[PIPE_WR]);
-
+printf("Si la señal es SIGUSR1, al mensaje entrante se le aplicara ROT13\n");  
+printf("Si la señal es SIGUSR2, al mensaje entrante se le filtrara las palabras %s,%s,%s\n",palabra1f,palabra2f,palabra3f);  
 	leido=read(STDIN_FILENO,mensaje,sizeof mensaje);
 	write(pah[PIPE_WR],mensaje,leido);
 
@@ -110,41 +76,7 @@ int main (int argc, char *const argv[])
 
 	close(hap[PIPE_RD]);
 	close(pah[PIPE_WR]);
-
-
 	return 0;	
 }
 
-/*void palabras(char *palabras){
-  char s2[4] = ",";
 
-  memset(palabra1, 0, sizeof palabra1);
-  memset(palabra2, 0, sizeof palabra2);
-  memset(palabra3, 0, sizeof palabra3);
-//  printf( "s1=%s\n", argv[2] );
-
-ptr = strtok( palabras, s2 );    // Primera llamada => Primer token
-//  printf( "%s\n", ptr );
-strcpy(palabra1,ptr);
-while( (ptr = strtok( NULL, s2 )) != NULL ){    // Posteriores llamadas
-//      printf( "%s\n", ptr );
-
-k++;
-if(k==2){
-strcpy(palabra2,ptr);
-}
-
-if(k==3){
-strcpy(palabra3,ptr);
-}
-
-}
-
-printf (" palabra1: %s \n",palabra1);
-
-printf (" palabra2: %s \n",palabra2);
-printf (" palabra3: %s \n",palabra3);
-
-
-
-}*/
