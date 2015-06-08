@@ -11,7 +11,7 @@ int k=1;
 char  *palabras(char *palabras, int cont){
 	char *ptr;
 	char *p;
-	char s2[4] = ",";
+	char* s2 = ",";
 
 
 	ptr = strtok( palabras, s2 );    // Primera llamada => Primer token

@@ -13,9 +13,6 @@ int main (int argc, char *const argv[])
 	extern char *optarg;
 	extern int optind, opterr, optopt;
 
-	pipe(pah);
-	pipe(hap);
-	pipe(han);
 	printf("soy %d (main) \n",getpid());		
 	int pid,leido;
 	char mensaje[100],buff[100];

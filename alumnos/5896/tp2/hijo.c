@@ -22,9 +22,10 @@ void manejador (int signo){
 
 	}
 	//Si es SIGUSR2 entonces
-	else
-	{
-		nieto(signo);
+	else{
+		if(signo==SIGUSR2)
+		{
+			nieto(signo);
+		}
 	}
-
 }
