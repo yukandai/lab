@@ -5,7 +5,7 @@ all: $(TARGETS)
 
 # objetivo: dependencias
 #	reglas ( tab )
-tp2: main.c padre.c hijo.c rot13.c nieto.c sigusr.c
+tp2: main.c padre.c hijo.c rot13.c nieto.c sigusr.c palabras.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 test: tp2

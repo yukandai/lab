@@ -1,5 +1,5 @@
-#ifndef _HIJO_H_
-#define _HIJO_H_
+#ifndef _PALABRAS_H_
+#define _PALABRAS_H_
 
 	#include <stdio.h>
 	#include <stdlib.h>
@@ -11,13 +11,8 @@
 	#include <fcntl.h>
 	#include <errno.h>
 	#include <sys/wait.h>
-	#include <signal.h>	
-
-		
-		
-		void funcionHijo(int hijo_lee_padre, int hijo_escribe_escribe, char *palabras);
-		void senal(int nro);
-		
-		
+	
+		void obtenerPalabras(char **palabras);
+		int obtenerCantidadPalabras(char *palabras);
   
 #endif

@@ -1,11 +1,25 @@
 #include "hijo.h"
 #include "padre.h"
-
+#include "palabras.h"
 int main (int argc, char **argv){
 
 	int tuberia_padre_hijo[2]; // pipe1 -- [0] --> read   [1] --> write
 	int tuberia_hijo_padre[2]; // pipe2
-//	int tuberia_nieto_hijo[2]; // pipe3
+
+	int opcion;
+	char *palabras = NULL;
+
+	while ((opcion = getopt (argc,argv, "p:")) != -1){
+		switch (opcion){
+			case 'p':
+				obtenerPalabras(&palabras);
+				break;
+
+		}
+
+
+	}
+
 
 	if (pipe(tuberia_padre_hijo) != 0){
 		perror ("Error en el pipe padre - hijo");
@@ -31,7 +45,7 @@ int main (int argc, char **argv){
 			close(tuberia_padre_hijo[1]); // cierro escritura
 			close(tuberia_hijo_padre[0]); // cierro lectura		
 //			printf("hijoo\n");
-			funcionHijo(tuberia_padre_hijo[0],tuberia_hijo_padre[1]);
+			funcionHijo(tuberia_padre_hijo[0],tuberia_hijo_padre[1],palabras);
 			return 2;
 	
 

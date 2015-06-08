@@ -1,10 +1,13 @@
 #include "padre.h"
-#include "rot13.h"
+
+
 void funcionPadre(int padre_escribe_hijo, int padre_lee_hijo){ // pipe1, pipe2
 
 
 	int leido;
 	int leidos;
+	
+
 	char delimitador[] = " \n";
 	char buffer[1500];
 	memset(buffer,0,sizeof(buffer));
@@ -14,8 +17,12 @@ void funcionPadre(int padre_escribe_hijo, int padre_lee_hijo){ // pipe1, pipe2
 	char buf[10];
 	memset(buf,0,sizeof(buf));
 	char *buf2 = NULL;
+	
 
-	while((leido = read(STDIN_FILENO,buffer,sizeof(buffer))) > 0){
+
+
+
+	while ((leido = read(STDIN_FILENO,buffer,sizeof(buffer))) > 0){
 		result = strtok(buffer,delimitador);
 		
 		while (result != NULL){

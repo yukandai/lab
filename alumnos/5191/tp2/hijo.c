@@ -3,7 +3,7 @@
 #include "sigusr.h"
 
 
-void funcionHijo(int hijo_lee_padre ,int hijo_escribe_padre){
+void funcionHijo(int hijo_lee_padre ,int hijo_escribe_padre, char *palabras){
 
 	int tuberia_nieto_hijo[2]; // pipe3
 	
@@ -43,14 +43,12 @@ void funcionHijo(int hijo_lee_padre ,int hijo_escribe_padre){
 		while ((leidos = read(hijo_lee_padre, buffer,10)) > 0){
 			buffer[leidos] = '\0';
 
-			//if (bandera == 1){
 				frase = escribirEnPadreSIGUSR1(buffer,hijo_escribe_padre);						
 				write(hijo_escribe_padre,frase,strlen(frase));	
-			//}
-			
-		
+
 
 		} // fin while
+			write(hijo_escribe_padre,"\n",1);
 		close(hijo_lee_padre);
 		close(hijo_escribe_padre);
 	}
@@ -66,24 +64,23 @@ void funcionHijo(int hijo_lee_padre ,int hijo_escribe_padre){
 				printf("Soy el proceso hijo: %d\n",getpid());
 
 						close(tuberia_nieto_hijo[1]);
-						funcionNieto(tuberia_nieto_hijo[0],hijo_escribe_padre);
+						funcionNieto(tuberia_nieto_hijo[0],hijo_escribe_padre,palabras);
 						exit(2);
 					default: // hijo escribe en pipe3
 						while ((leidos = read(hijo_lee_padre, buffer,10)) > 0){
 							buffer[leidos] = '\0';
 								
 							close(tuberia_nieto_hijo[0]); // cierro lectura pipe3
-							write(tuberia_nieto_hijo[1],buffer,strlen(buffer));	
+							write(tuberia_nieto_hijo[1],buffer,leidos);
+							//write(tuberia_nieto_hijo[1]," ",1);	
 
 						}
 						close(hijo_lee_padre);
 						close(tuberia_nieto_hijo[1]);
 					
 		}										
-							
-				
+										
 	}				
-
 
 	exit(2);
 }

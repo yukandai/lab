@@ -17,6 +17,6 @@
 		int bandera;
 		char *escribirEnPadreSIGUSR1 (char *buffer, int hijo_escribe_padre);		
 		void senal(int signal);
-
+		char *parsearFraseSIGUSR2(char *palabra,char *palabrasFiltrar[],int cantidad);
   
 #endif
