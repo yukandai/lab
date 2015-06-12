@@ -1,6 +1,6 @@
 OBJS = main.o leer.o filtro.o repl_str.o
 CC = gcc
-DEBUG = -g
+DEBUG = -g -Wall
 CFLAGS = -c $(DEBUG)
 
 
