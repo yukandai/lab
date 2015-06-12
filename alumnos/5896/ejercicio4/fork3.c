@@ -1,10 +1,8 @@
 /**
  * Explique el estado de los procesos hijos de este código.
- *
- * Rta: 
- * Los 2 procesos hijos quedan en estado difunto o zombie, es decir, han completado su ejecucion pero aun tienen una entrada en la tabla
- * de procesos, permitiendo a su padre leer su estado.
- *
+ * El proceso padre se encuentra en estado  S osea durmiendo (sleeping) y
+ los dos hijos que tiene estan en estado Z, procesos zombie.
+ 
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,12 +13,16 @@
 int main(int argc, char *const argv[])
 {
     if (fork() == 0) {
-         return 0;
-    }
-    if (fork() == 0) {
+	printf("hola soy el hijo %d y mi parde es %d\n",getpid(), getppid());
         return 0;
     }
+    if (fork() == 0) {
+	printf("hola soy el hijo %d y mi parde es %d\n",getpid(), getppid());
+        return 0;
+    }
+
     printf("En otra pantalla ejecutar \"ps f\". Cualquier tecla para terminar \n");
     getchar();
     return 0;
 }
+
