@@ -27,7 +27,7 @@ int main(int argc, char **argv){
 				archi = optarg;
 				break;
 			case 'h':
-				printf("\nMODO DE USO\ncat Archivo.txt | ./ej1\ncat Archivo.txt | ./ej1 -o SalidaArchivo.txt\n");
+				printf("\nMODO DE USO\n\ncat Archivo.txt | ./ej1\ncat Archivo.txt | ./ej1 -o SalidaArchivo.txt\n\n\n");
 				exit(1);
 			default:
 				printf("\n ./ej1 -h\n");

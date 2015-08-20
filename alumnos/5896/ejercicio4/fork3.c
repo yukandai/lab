@@ -1,7 +1,8 @@
 /**
  * Explique el estado de los procesos hijos de este código.
- * El proceso padre se encuentra en estado  S osea durmiendo (sleeping) y los dos hijos que tiene estan en estado Z, procesos zombie.
-
+ * El proceso padre se encuentra en estado  S osea durmiendo (sleeping) y
+ los dos hijos que tiene estan en estado Z, procesos zombie.
+ 
  */
 #include <stdio.h>
 #include <stdlib.h>
