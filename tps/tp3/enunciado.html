@@ -743,13 +743,13 @@ asciidoc.install();
 <div class="paragraph"><p>Entrega final:          01/09/2015</p></div>
 <div class="sect2">
 <h3 id="_requerimientos">Requerimientos:</h3>
-<div class="paragraph"><p>Desarrollar una aplicación cuyo proceso padre lance dos hijos. El proceso padre leerá del la
-entrada estandar (stdin) y cargará en memoria compartida lo que lee. Los procesos hijos
-deberán esperar en un semáforo para saber cuando comenzar a procesar la información. El semáforo
-servirá para sincronizar la escritura en memoria compartida. Cada proceso hijo filtrará el
+<div class="paragraph"><p>Desarrollar una aplicación cuyo proceso padre lance un hijo. El proceso padre leerá del la
+entrada estandar (stdin) y cargará en memoria compartida lo que lee. El proceso hijo deberá
+esperar en un semáforo para saber cuando comenzar a procesar la información. Otro semáforo
+servirá para sincronizar la escritura en memoria compartida. El proceso hijo filtrará el
 texto en memoria y remplazará las palabras prohibidas por asteriscos.</p></div>
-<div class="paragraph"><p>Al final del proceso, el proceso padre deberá mostrar por stdout la salida del texto
-modificado.</p></div>
+<div class="paragraph"><p>Al final del procesamiento, el proceso padre deberá mostrar por la salida estandar (stdout)
+el texto modificado.</p></div>
 <div class="paragraph"><p>La aplicación deberá contener al menos los siguientes archivos: main.c, hijo.h, hijo.c,
 parser.h, parser.c, Makefile.</p></div>
 <div class="paragraph"><p>La función main() deberá contener como máximo 50 líneas de código sin contar espacios en blanco
@@ -813,7 +813,7 @@ getopt() para manejar los argumentos que recibe un programa
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2015-08-20 10:59:52 ART
+ 2015-08-26 16:00:50 ART
 </div>
 </div>
 </body>
