@@ -743,11 +743,11 @@ asciidoc.install();
 <div class="paragraph"><p>Entrega final:          01/09/2015</p></div>
 <div class="sect2">
 <h3 id="_requerimientos">Requerimientos:</h3>
-<div class="paragraph"><p>Desarrollar una aplicación cuyo proceso padre lance un hijo. El proceso padre leerá del la
+<div class="paragraph"><p>Desarrollar una aplicación cuyo proceso padre lance un hijo. El proceso padre leerá de la
 entrada estandar (stdin) y cargará en memoria compartida lo que lee. El proceso hijo deberá
-esperar en un semáforo para saber cuando comenzar a procesar la información. Otro semáforo
-servirá para sincronizar la escritura en memoria compartida. El proceso hijo filtrará el
-texto en memoria y remplazará las palabras prohibidas por asteriscos.</p></div>
+esperar en un semáforo para saber cuando comenzar a procesar la información. Usar el mismo
+u otro semáforo para sincronizar la escritura en memoria compartida. El proceso hijo filtrará
+el texto en memoria y reemplazará las palabras prohibidas por asteriscos.</p></div>
 <div class="paragraph"><p>Al final del procesamiento, el proceso padre deberá mostrar por la salida estandar (stdout)
 el texto modificado.</p></div>
 <div class="paragraph"><p>La aplicación deberá contener al menos los siguientes archivos: main.c, hijo.h, hijo.c,
@@ -813,7 +813,7 @@ getopt() para manejar los argumentos que recibe un programa
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2015-08-26 16:00:50 ART
+ 2015-08-26 16:49:21 ART
 </div>
 </div>
 </body>
