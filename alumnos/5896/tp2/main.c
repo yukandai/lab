@@ -55,12 +55,14 @@ int main (int argc, char *const argv[])
 			perror("error en la señal SIGUSR2");
 			exit(EXIT_FAILURE);
 		}
-		for ( ; ; )
+		for ( ; ; ){
 			pause();
+			}
+		return 0;
 	}
 
 	//padre
-	sleep(2);	
+	//sleep(2);	
 	close(pah[PIPE_RD]);
 	close(hap[PIPE_WR]);
 	printf("Si la señal es SIGUSR1, al mensaje entrante se le aplicara ROT13\n");  
