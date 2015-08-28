@@ -1,29 +1,34 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <string.h>
+#include <stdio.h> //printf
 #include "func.h"
 #include "srch.h"
 
 int srch(char *input){		//input es el *dato
 	char *str1;				//puntero para el TOKEN
 	int i,pt=0,chk=0;
-	char out_buff[BUF_SIZE]; 		//buffer de la salida filtrada
         char *palabras[10];
-	char point[BUF_SIZE];			//para recobrar separadores
 	char relleno[20];			//asteriscos
 	int n_palabras=0;
+//	char input[BUF_SIZE];
+	char point[BUF_SIZE];			//para recobrar separadores
+	char out_buff[BUF_SIZE]; 		//buffer de la salida filtrada
 
+//	memset(input,0,sizeof input);
 	memset(out_buff,0,sizeof out_buff);
 	memset(point,0,sizeof point);
 	memset(relleno,'*',sizeof relleno); 	//conjunto de '*' para  completar
-	strcpy(&point[0],input);		//input se destruye cuando pasa por strtok, asi que la copio
+	strcpy(&point[0],input);			//input se destruye cuando pasa por strtok, asi que la copio
 	
+
+//	printf("point %s\n",buff);
 	for(i=0,str1=strtok(words,",");str1!=NULL;str1=strtok(NULL,","),i++){	//parseo las palabras a filtrar
 		palabras[i]=str1;
 	}
 	n_palabras=i; 					//guardo las cantidad de palabras a filtrar
 
-	for(str1=strtok(input," \n\t,.");str1!=NULL;str1=strtok(NULL," \n\t,."),chk=0){ 	//en strtok el 2° argumento son los delimitadores
+	for(str1=strtok(input," \n\t,.");str1!=NULL;str1=strtok(NULL," \n\t,."),chk=0){ //strtok el 2° arg son delimitadores
 		for(i=0;i<n_palabras;i++){
 			if(((strcmp(str1,palabras[i]))==0)&&chk==0){		//comparo cada palabra para ver si las imprimo
 			//	printf("palabra filtrada:%s\n",palabras[i]);
@@ -40,6 +45,6 @@ int srch(char *input){		//input es el *dato
 
 	}
 	strcpy(input,out_buff);
-	msync(input,strlen(out_buff), MS_ASYNC);
+	//msync(buff,strlen(out_buff), MS_ASYNC);
 	return 0;
 }
