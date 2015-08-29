@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>	//getopt
-#include <stdio.h>	//perror
+#include <stdio.h>	
 #include <stdlib.h>	//exit
 #include <string.h> 	//strcpy
 #include "func.h"
@@ -24,12 +24,11 @@ int main(int argc, char *argv[]){
 	int n,fd,c=0;
 	int m_sh= sizeof(char) * BUF_SIZE;
 	int m_size= m_sh+sizeof(sem_t);
-	int val_sp=0;
 	void * addr;				 //punteros a ShMem para que escriban los hijos
 	char buff[BUF_SIZE];
 
-	if((fd=shm_open("/shm",O_CREAT| O_RDWR |O_TRUNC,0666))==-1) exit(EXIT_FAILURE);
-	if((ftruncate(fd,m_size))==-1) exit(EXIT_FAILURE);
+	if((fd=shm_open("/shm",O_CREAT| O_RDWR |O_TRUNC,0666))==-1) exit(EXIT_FAILURE);	//crea/abre un objeto shm
+	if((ftruncate(fd,m_size))==-1) exit(EXIT_FAILURE); 		//le doy el tamaño para la shm a crear
 	addr = mmap(NULL,m_size,PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,fd,0);
 	if (addr==MAP_FAILED) exit (EXIT_FAILURE);
 
@@ -39,36 +38,26 @@ int main(int argc, char *argv[]){
 
 	if (((sem_init(sp,1,0))==-1)) exit (EXIT_FAILURE); 
 
-	while((c=getopt(argc,argv,"p:"))!=-1||argc==1){
-		switch(c){
-			case 'p':
-				words=argv[2];
-				switch(fork()){
-					case -1:
-						perror("fork: ");
-						exit(EXIT_FAILURE);
-					case 0:
-						hijo();
-						//printf("soy el hijo:\n%s\n",buff);
-						return 0;
-					default:
-						while((n=read(STDIN_FILENO,buff,m_sh))>0){
-							strcpy(input,buff);	
-							sem_getvalue(sp,&val_sp);
-							printf("sp_value:%d\n",val_sp);
-							sem_wait(sp);
-							write(STDOUT_FILENO,input,n);
-							wait(NULL);
-							shm_unlink("/shm");
-						}
+	if((c=getopt(argc,argv,"p:"))!=-1 && argc==3){
+		words=argv[2];				//palabras que vamos a buscar
+		switch(fork()){
+			case -1:
+				perror("fork: ");
+				exit(EXIT_FAILURE);
+			case 0:
+				hijo();
 				return 0;
-
-
+			default:	/*--------------------Padre-------------------------*/
+				while((n=read(STDIN_FILENO,buff,m_sh))>0){
+					strcpy(input,buff);		//agrego el \0 al final de lo leido
+					sem_wait(sp);
+					write(STDOUT_FILENO,input,n);
+					wait(NULL); 			//espero al hijo
+					shm_unlink("/shm");		//libera la shm
 				}
-			default:
-				printf("Modo de uso:\t cat mensaje.txt | ./tp3 -p <palabras,a,filtrar>\n");
 				return 0;
-		}
-	}
+		}		
+	}	
+	printf("Modo de uso:\t cat mensaje.txt | ./tp3 -p <palabras,a,filtrar>\n");
 	exit(EXIT_FAILURE);
 }
