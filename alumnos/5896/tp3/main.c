@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 	sem_init(semaforo,1,1);
 	sem_wait(semaforo);
 	orgmensaje=mmap(NULL, 1024, PROT_READ | PROT_WRITE, MAP_SHARED, fdo, 0);
-//	sem_post(semaforo);
+	//	sem_post(semaforo);
 	//hijo
 	pid = fork();
 	if(pid == 0){
@@ -55,10 +55,10 @@ int main(int argc, char **argv)
 		hijo();
 		sem_post(semaforo);
 		return 0;
-}
+	}
 
-sem_post(semaforo);
-wait(NULL);
+	sem_post(semaforo);
+	wait(NULL);
 	printf("soy el padre %d y el mensaje filtrado es el sigiente:%s \n",getpid(),orgmensaje);
 	return 0;
 }

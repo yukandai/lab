@@ -30,8 +30,8 @@ void hijo(){
 	}
 	char *pfiltrado=filtrado;
 	printf("soy %d  hijo de %d  mostrando el mensaje original: %s\n",getpid(),getppid(),orgmensaje);
-//	printf("%s soy el hijo %d de %d \n",filtrado,getpid(),getppid());
-//	printf("%s soy el hijo %d de %d a travez del puntero \n",pfiltrado,getpid(),getppid());
+	//	printf("%s soy el hijo %d de %d \n",filtrado,getpid(),getppid());
+	//	printf("%s soy el hijo %d de %d a travez del puntero \n",pfiltrado,getpid(),getppid());
 
 	//sobrescribo el mensaje filtrado a la memoria compartida
 	strcpy(orgmensaje,pfiltrado);	
