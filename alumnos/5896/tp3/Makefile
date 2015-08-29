@@ -16,7 +16,7 @@ test2: tp3
 
 
 test3: tp3
-	cat mensaje.txt | ./tp3 -p hola,mono,meme
+	cat entrada.txt | ./tp3 -p hola,mono,meme
 
 
 clean:
