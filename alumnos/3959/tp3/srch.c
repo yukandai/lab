@@ -5,7 +5,7 @@
 #include "func.h"
 #include "srch.h"
 
-int srch(char *input){		//input es el *dato
+int srch(){		//input es el *dato
 	char *str1;				//puntero para el TOKEN
 	int i,pt=0,chk=0;
         char *palabras[10];
@@ -45,6 +45,6 @@ int srch(char *input){		//input es el *dato
 
 	}
 	strcpy(input,out_buff);
-	//msync(buff,strlen(out_buff), MS_ASYNC);
+	msync(input,strlen(input), MS_ASYNC);
 	return 0;
 }

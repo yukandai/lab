@@ -4,7 +4,8 @@
 #include "srch.h"
 
 int hijo(){
-	srch(input);
+	sem_wait(sp);
+	srch();
 	sem_post(sp);
 	return 0;
 	}

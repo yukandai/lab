@@ -48,13 +48,14 @@ int main(int argc, char *argv[]){
 				hijo();
 				return 0;
 			default:	/*--------------------Padre-------------------------*/
-				while((n=read(STDIN_FILENO,buff,m_sh))>0){
+				if((n=read(STDIN_FILENO,buff,m_sh))>0){
 					strcpy(input,buff);		//agrego el \0 al final de lo leido
-					sem_wait(sp);
-					write(STDOUT_FILENO,input,n);
+					sem_post(sp);
 					wait(NULL); 			//espero al hijo
-					shm_unlink("/shm");		//libera la shm
+					write(STDOUT_FILENO,input,n);
 				}
+				sem_destroy(sp);
+				shm_unlink("/shm");		//libera la shm
 				return 0;
 		}		
 	}	
