@@ -25,8 +25,8 @@ memset(buffer,0,sizeof(buffer));
 			
 				
 	}//fin while
+	sem_wait(semaforo);
 	
-	wait(NULL);
 	write(1,mem_buff,strlen(mem_buff));
     printf ("fin padre\n");
 	
