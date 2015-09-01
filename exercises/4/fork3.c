@@ -15,7 +15,7 @@
 int main(int argc, char *const argv[])
 {
     if (fork() == 0) {
-         return 0;
+        return 0;
     }
     if (fork() == 0) {
         return 0;
