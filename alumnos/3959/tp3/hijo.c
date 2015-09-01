@@ -3,9 +3,9 @@
 #include "hijo.h"
 #include "srch.h"
 
-int hijo(){
+int hijo(char * input){
 	sem_wait(sp);
-	srch();
+	srch(input);
 	sem_post(sp);
 	return 0;
 	}

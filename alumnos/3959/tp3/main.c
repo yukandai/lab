@@ -17,7 +17,6 @@
 #include "hijo.h"
 
 char *words;
-char *input;
 sem_t * sp;
 
 int main(int argc, char *argv[]){
@@ -26,6 +25,7 @@ int main(int argc, char *argv[]){
 	int m_size= m_sh+sizeof(sem_t);
 	void * addr;				 //punteros a ShMem para que escriban los hijos
 	char buff[BUF_SIZE];
+	char *input;
 
 	if((fd=shm_open("/shm",O_CREAT| O_RDWR |O_TRUNC,0666))==-1) exit(EXIT_FAILURE);	//crea/abre un objeto shm
 	if((ftruncate(fd,m_size))==-1) exit(EXIT_FAILURE); 		//le doy el tamaño para la shm a crear
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 				perror("fork: ");
 				exit(EXIT_FAILURE);
 			case 0:
-				hijo();
+				hijo(input);
 				return 0;
 			default:	/*--------------------Padre-------------------------*/
 				if((n=read(STDIN_FILENO,buff,m_sh))>0){
