@@ -15,7 +15,7 @@
 int main(int argc, char **argv)
 {
 	char mensaje[100],buff[100];
-//	char *orgmensaje;
+	//	char *orgmensaje;
 	int pid;
 	int leido;
 	int fd, fdo;
@@ -47,19 +47,19 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	while(
-	(leido=read(STDIN_FILENO,buff,sizeof buff)) > 0){	
-	write(fd,buff,leido);
+			(leido=read(STDIN_FILENO,buff,sizeof buff)) > 0){	
+		write(fd,buff,leido);
 	}
 	fdo=open("salida.txt", O_RDWR);
 	sem_init(semaforo,1,1);
 	sem_wait(semaforo);
 	while(
-	(leido= read(fdo,mensaje,sizeof mensaje)) > 0){
-	//mapeo el archivo a memoria
-//	sem_init(semaforo,1,1);
-//	sem_wait(semaforo);
-	orgmensaje=mmap(NULL, 1024, PROT_READ | PROT_WRITE, MAP_SHARED, fdo, 0);
-//	sem_post(semaforo);
+			(leido= read(fdo,mensaje,sizeof mensaje)) > 0){
+		//mapeo el archivo a memoria
+		//	sem_init(semaforo,1,1);
+		//	sem_wait(semaforo);
+		orgmensaje=mmap(NULL, 1024, PROT_READ | PROT_WRITE, MAP_SHARED, fdo, 0);
+		//	sem_post(semaforo);
 	}
 	//hijo
 	pid = fork();
@@ -71,10 +71,10 @@ int main(int argc, char **argv)
 		strcpy(orgmensaje,msgfiltrado);
 		sem_post(semaforo);
 		return 0;
-}
+	}
 
-sem_post(semaforo);
-wait(NULL);
+	sem_post(semaforo);
+	wait(NULL);
 	printf("soy el padre %d y el mensaje filtrado es el sigiente:\n\n%s\n\n",getpid(),orgmensaje);
 	return 0;
 }
