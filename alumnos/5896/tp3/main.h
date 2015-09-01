@@ -14,13 +14,13 @@
 
 
 //Declaramos variables
-	char mensaje[100],buff[100];
-	char *orgmensaje;
-	int pid;
-	int leido;
-	int fd, fdo;
-	int operacion;
-	extern char *optarg;
-	extern int optind, opterr, optopt;
-		
+char mensaje[100],buff[100];
+//	char *orgmensaje;
+int pid;
+int leido;
+int fd, fdo;
+int operacion;
+extern char *optarg;
+extern int optind, opterr, optopt;
+
 #endif

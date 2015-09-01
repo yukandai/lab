@@ -13,11 +13,11 @@
 //Declaramos funciones
 
 //void filtrar();
-		void hijo();
+char *hijo(char *shm_dir);
 //Declaramos variables
-		char mensajeafiltrar[100];
-		char filtrado[100];
-		//char palabra[1024]="hola";
-		char *token;
-		int m,n,p;//,i;
+char mensajeafiltrar[100];
+char filtrado[100];
+//char palabra[1024]="hola";
+char *token;
+int m,n,p;//,i;
 #endif

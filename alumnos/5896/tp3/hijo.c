@@ -2,11 +2,11 @@
 #include "hijo.h"
 #include "main.h"
 
-void hijo(){
+char *hijo(char *shm_dir){
 
 	memset(filtrado, 0, sizeof filtrado);
 	//char palabra[1024]="hola";
-	strcpy(mensajeafiltrar,orgmensaje);
+	strcpy(mensajeafiltrar,shm_dir);
 
 	//empieza el filtrado
 	token = strtok(mensajeafiltrar, " \n\t");
@@ -29,14 +29,14 @@ void hijo(){
 		strcat(filtrado," ");
 	}
 	char *pfiltrado=filtrado;
-	printf("soy %d  hijo de %d  mostrando el mensaje original: %s\n",getpid(),getppid(),orgmensaje);
+	printf("soy %d  hijo de %d  mostrando el mensaje original: %s\n",getpid(),getppid(),shm_dir);
 	//	printf("%s soy el hijo %d de %d \n",filtrado,getpid(),getppid());
 	//	printf("%s soy el hijo %d de %d a travez del puntero \n",pfiltrado,getpid(),getppid());
 
 	//sobrescribo el mensaje filtrado a la memoria compartida
-	strcpy(orgmensaje,pfiltrado);	
+	//strcpy(orgmensaje,pfiltrado);	
 
-
+	return pfiltrado; 
 
 
 

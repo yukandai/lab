@@ -18,7 +18,9 @@ int main(int argc, char **argv)
 	void *psem;
 	leido=0;
 	operacion=0;
+	char *orgmensaje;
 	sem_t *semaforo;
+	char *msgfiltrado;
 	psem = mmap(NULL,sizeof(sem_t), PROT_READ | PROT_WRITE, 
 			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 	semaforo=(sem_t*)psem;
@@ -51,8 +53,9 @@ int main(int argc, char **argv)
 	if(pid == 0){
 		sem_wait(semaforo);
 		memset(filtrado, 0, sizeof filtrado);
-		strcpy(mensajeafiltrar,orgmensaje);
-		hijo();
+		//strcpy(mensajeafiltrar,orgmensaje);
+		msgfiltrado = hijo(orgmensaje);
+		strcpy(orgmensaje,msgfiltrado);
 		sem_post(semaforo);
 		return 0;
 	}
