@@ -11,7 +11,6 @@
 #include <string.h>
 #include "parser.h"
 #include "hijo.h"
-#include "main.h"
 
 int main(int argc, char **argv)
 {

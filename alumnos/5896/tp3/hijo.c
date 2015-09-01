@@ -1,6 +1,5 @@
 #include "parser.h"
 #include "hijo.h"
-#include "main.h"
 
 char *hijo(char *shm_dir){
 		char mensajeafiltrar[1024];
