@@ -11,6 +11,11 @@ tp3: main.c hijo.c srch.c
 test:	
 	cat mensaje.txt | ./tp3 -p hola,como,con
 
+.PHONY:test2
+test2:
+	ls -l | ./tp3 -p hijo,srch,anakin
+
+
 .PHONY: clean
 clean:
 	rm -f *.o *~ $(TARGETS)

@@ -1,5 +1,4 @@
 #ifndef _HIJO_H
 	#define _HIJO_H_
-	extern sem_t * sp;
-	int hijo(char * input);
+	int hijo(char * input,sem_t * sp,char * words,sem_t * sp_c);
 #endif
