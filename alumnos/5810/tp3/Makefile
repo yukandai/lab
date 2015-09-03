@@ -4,7 +4,7 @@ TARGETS=tp3
 
 all: $(TARGETS)
 
-tp3: main.c comparar.c
+tp3: main.c comparar.c funhijo.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 
