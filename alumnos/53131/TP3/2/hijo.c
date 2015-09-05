@@ -26,7 +26,7 @@ void hijo (void **mem, sem_t **sem, void **leido){
         }
         fd=open ("./palabras.txt", O_RDONLY , 0444);
         msje=strcpy (msje, *mem);
-        do{
+        while ((read(fd, &tmp2[0],1))>0){
             i=0;
 
             lseek (fd, -1, SEEK_CUR);
@@ -48,7 +48,7 @@ void hijo (void **mem, sem_t **sem, void **leido){
             
        
         
-        }while ((read(fd, &tmp2[0],1))>0); 
+        }; 
         write (STDOUT_FILENO, msje, l);
         *mem=strcpy (*mem, msje);
         
