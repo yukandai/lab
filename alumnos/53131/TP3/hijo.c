@@ -28,38 +28,25 @@ void hijo (void **mem, sem_t **sem, void **leido){
         msje=strcpy (msje, *mem);
         while ((read(fd, &tmp2[0],1))>0){
             i=0;
-
             lseek (fd, -1, SEEK_CUR);
             do{
-
-            cant=read (fd, &buff[i], 1);
-            c=buff[i];
-            i++;
+                cant=read (fd, &buff[i], 1);
+                c=buff[i];
+                i++;
             }while (c!='\n');
             
-                        
-           
-
             snprintf (&proh[0], i, "%s", &buff[0]); 
             //memset (&rep[0], '*', i);
             snprintf (&rep[0], i, "***********************************") ;
             temp=msje;
 
             msje=parser(msje, &proh[0], &rep[0]);
-            
             free (temp);
-       
-        
         }; 
         write (STDOUT_FILENO, msje, l);
         *mem=strcpy (*mem, msje);
-        
         free (msje);
         sem_post(*sem);
         close (fd);
         remove ("./palabras.txt");
-
-        
-    
- 
 }
