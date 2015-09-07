@@ -16,25 +16,20 @@
 void crear_arch (int *argc, char **argv){
 
 
-       FILE *fp;
-       int i, fd, leido;
+       FILE *fd;
+       int i;
        char *str;
 
-       fd=open ("./palabras.txt", O_RDWR | O_CREAT | O_TRUNC, 0777);
-       //fp=fdopen (fd, "w+");
+       fd=fopen ("./palabras.txt", "w");
+       
        str=strtok (*(argv+2),",");
-                       
+      
        while (str!= NULL){
             
-           //fprintf (fp, "%s\n", str);
-           leido=strlen (str);
-           write (fd,str, leido); 
-           write (fd,"\n", 1); 
-           
-           str =strtok (NULL, ",");
+            fprintf (fd, "%s\n", str);
+            str =strtok (NULL, ",");
        }
 
-         //fclose (fp);
-         close (fd);
-         
+         fclose (fd);
+
 }

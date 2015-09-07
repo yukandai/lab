@@ -20,9 +20,9 @@ int main (int argc, char **argv){
     char c;
     void *mem , *leido;
     int *carat, status;
-    sem_t *sem=mmap(0, sizeof (sem), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); //semáforo compartidp
-    mem= mmap(0,SIZE, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);         //mensaje compartido
-    leido=mmap (0, 8,  PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);        //cantidad de caracteres leidos
+    sem_t *sem=mmap(0, sizeof (sem), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); //semáforo
+    mem= mmap(0,SIZE, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);         //memoria compartida
+    leido=mmap (0, 8,  PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); 
 
 if (sem_init (sem, 1, 0)<0){ //inicia semáforo
     perror ("Seminit: ");
@@ -42,21 +42,24 @@ switch (fork()){
             hijo (&mem, &sem, &leido);
             return 0;
     break;
+
     default:
         while((c=getopt (argc, argv, "p:")) != -1){
             switch (c){
                 case 'p':
-                    crear_arch (&argc, argv);  //crea archivo temporal con palabras a filtrar
+                    crear_arch (&argc, argv);
                     *((int*)leido)=read (STDIN_FILENO, mem, SIZE);
                     sem_post(sem);
                     wait (&status);
                     sem_destroy(sem);
                     return 0;
                 break;
+
                 case '?':
                     printf ("Error\n");
                     return -1;
                 break;
+
             }
         }
         if (argc==1){

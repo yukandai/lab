@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g #-Wall
+CFLAGS=-g -Wall
 LDFLAGS=-lpthread -lrt
 TARGETS=tp3
 FILES=main.c hijo.c parser.c crear_arch.c 

@@ -15,29 +15,50 @@
 
 void hijo (void **mem, sem_t **sem, void **leido){
 
-        int l=**(int**)leido, i;
-        FILE *fd;
-        char proh[50], rep[4]="????";
-        char *msje=malloc(l);          
-        
-        
-        fd=fopen ("./palabras.txt", "r");
-        //memcpy (msje, *mem, l);
-        msje=strcpy (msje, *mem);
-        
-        while (fscanf (fd, "%s", proh)==1){
+        int l=**(int**)leido, i=0,j, fd, cant, cond=1, nol ;
+        char proh[32]="", rep[32]="", c, buff[32]="",*msje=malloc(l+1), tmp2[2];      
+        void *temp;
 
-            msje=parser(msje, proh, rep);   
-        
+        if (!msje){
+            free (msje);
+            puts ("malloc failed");
+            exit (1);
         }
-        write (STDOUT_FILENO, msje, l);      
-        //memcpy (*mem, msje, l);
+        fd=open ("./palabras.txt", O_RDONLY , 0444);
+        msje=strcpy (msje, *mem);
+        while ((read(fd, &tmp2[0],1))>0){
+            i=0;
+
+            lseek (fd, -1, SEEK_CUR);
+            do{
+
+            cant=read (fd, &buff[i], 1);
+            c=buff[i];
+            i++;
+            }while (c!='\n');
+            
+                        
+           
+
+            snprintf (&proh[0], i, "%s", &buff[0]); 
+            //memset (&rep[0], '*', i);
+            snprintf (&rep[0], i, "***********************************") ;
+            temp=msje;
+
+            msje=parser(msje, &proh[0], &rep[0]);
+            
+            free (temp);
+       
+        
+        }; 
+        write (STDOUT_FILENO, msje, l);
         *mem=strcpy (*mem, msje);
         
-        sem_post(*sem);
-        fclose (fd);
-        remove ("./palabras.txt");
         free (msje);
+        sem_post(*sem);
+        close (fd);
+        remove ("./palabras.txt");
+
         
     
  
