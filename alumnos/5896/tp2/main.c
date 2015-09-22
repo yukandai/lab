@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -56,7 +57,8 @@ int main (int argc, char *const argv[])
 			exit(EXIT_FAILURE);
 		}
 		for ( ; ; ){
-			pause();
+			//pause();
+			wait(NULL);
 			}
 		return 0;
 	}
