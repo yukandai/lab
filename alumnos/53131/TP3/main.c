@@ -39,7 +39,7 @@ if (sem == MAP_FAILED){
 switch (fork()){
     case 0:
             sem_wait(sem);
-            hijo (&mem, &sem, &leido);
+            hijo (&mem, &sem,*(int*)leido);
             return 0;
     break;
     default:

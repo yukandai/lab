@@ -13,40 +13,46 @@
 #include "hijo.h"
 #include "parser.h"
 
-void hijo (void **mem, sem_t **sem, void **leido){
+void hijo (void **mem, sem_t **sem, int leido){
 
-        int l=**(int**)leido, i=0,j, fd, cant, cond=1, nol ;
-        char proh[32]="", rep[32]="", c, buff[32]="",*msje=malloc(l+1), tmp2[2];      
+        int l=leido, i=0,j, fd, cant, cond=1, nol ;
+        char proh[32]="", rep[32]="", c, buff[32]="",*msje=(char *) malloc(l*sizeof (char)), tmp2[1];      
         void *temp;
 
         if (!msje){
-            free (msje);
             puts ("malloc failed");
             exit (1);
         }
         fd=open ("./palabras.txt", O_RDONLY , 0444);
-        msje=strcpy (msje, *mem);
-        while ((read(fd, &tmp2[0],1))>0){
+        msje=strncpy (msje, *mem, l*sizeof (char));
+       
+        while ((read(fd, &tmp2[1],1))>0){
             i=0;
             lseek (fd, -1, SEEK_CUR);
             do{
-                cant=read (fd, &buff[i], 1);
-                c=buff[i];
-                i++;
-            }while (c!='\n');
+                  cant=read (fd, &buff[i], 1);
+                  c=buff[i];
+                  i++;
+                }while (c!='\n');
             
             snprintf (&proh[0], i, "%s", &buff[0]); 
             //memset (&rep[0], '*', i);
-            snprintf (&rep[0], i, "***********************************") ;
+            snprintf (rep, i, "***********************************") ;
             temp=msje;
-
             msje=parser(msje, &proh[0], &rep[0]);
-            free (temp);
-        }; 
+		    free (temp);
+        } 
+        
         write (STDOUT_FILENO, msje, l);
         *mem=strcpy (*mem, msje);
+        
         free (msje);
+        
         sem_post(*sem);
         close (fd);
-        remove ("./palabras.txt");
+        //remove ("./palabras.txt");
+
+        
+    
+ 
 }

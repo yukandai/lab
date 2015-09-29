@@ -2,7 +2,7 @@
 
     #define HIJO_H_
 
-        void hijo (void **, sem_t **, void**);
+        void hijo (void **, sem_t **, int);
 
 
 
