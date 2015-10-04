@@ -1,6 +1,4 @@
-#include "header.h"
-//#include "http_worker.h"
-
+#include "http_worker.h"
 
 int main(int argc, char * const *argv) {
 	int sd;
@@ -13,13 +11,10 @@ int main(int argc, char * const *argv) {
 
 	//
 	int opcion;
-	int puerto =  2222;
+	int puerto = 2222;
 	char *ruta = NULL;
-
 	//
-
-    /* TODO: agregar creación y configuración del socket */
-
+	
 	while ((opcion = getopt(argc,argv, "d:")) != -1){
 		switch (opcion){
 			case 'd':  // ruta
@@ -28,6 +23,7 @@ int main(int argc, char * const *argv) {
 		} // fin switch
 	} // fin while
 
+	/* TODO: agregar creación y configuración del socket */
 	sd = socket (AF_INET,SOCK_STREAM,0);
 
 	if (sd < -1){

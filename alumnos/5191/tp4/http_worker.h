@@ -1,5 +1,5 @@
-#ifndef _HEADER_H_
-#define _HEADER_H_
+#ifndef _HTTP_WORKER_H_
+#define _HTTP_WORKER_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +22,6 @@ void http_worker(int sd_conn, struct sockaddr *, char *ruta);
 
 void NombreRuta(char **nombre);
 
-
+char *URI (char *buffer,char *archivo, char *mime, char *ruta);
 
 #endif

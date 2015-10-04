@@ -6,7 +6,7 @@ all: $(TARGETS)
 # objetivo: dependencias
 #	reglas ( tab )
 
-tp4: main.c ruta.c http_worker.c
+tp4: main.c ruta.c http_worker.c URI.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 
@@ -15,4 +15,4 @@ test: tp4
 	#cat salida.txt
 
 clean:
-#	rm -fv $(TARGETS) *.o salida.txt 
+#	rm -fv $(TARGETS) *.o  
