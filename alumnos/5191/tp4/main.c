@@ -23,6 +23,10 @@ int main(int argc, char * const *argv) {
 		} // fin switch
 	} // fin while
 
+	if (ruta == NULL){
+		perror("Error en la ruta");
+		return -1;
+	}
 	/* TODO: agregar creación y configuración del socket */
 	sd = socket (AF_INET,SOCK_STREAM,0);
 
@@ -61,6 +65,7 @@ int main(int argc, char * const *argv) {
 				break;
 
 			default: // padre
+				printf("Inicio de Servidor en el puerto: %d",puerto);
 				
 				break;
 		} // fin switch

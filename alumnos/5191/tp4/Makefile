@@ -15,4 +15,4 @@ test: tp4
 	#cat salida.txt
 
 clean:
-#	rm -fv $(TARGETS) *.o  
+	rm -fv $(TARGETS) *.o  
