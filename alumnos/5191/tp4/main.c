@@ -9,6 +9,7 @@ int main(int argc, char * const *argv) {
 	struct sockaddr_in srv_addr;
 	struct sockaddr_in cli_addr;
 
+	addrlen = sizeof(cli_addr);
 	//
 	int opcion;
 	int puerto = 2222;
@@ -56,7 +57,7 @@ int main(int argc, char * const *argv) {
 	while( (sd_conn = accept(sd, (struct sockaddr *) &cli_addr, &addrlen)) > 0) {
 		switch (fork()) {
 			case 0: // hijo
-				printf ("Direccion del nuevo cliente: %s en el puerto %d \n",inet_ntoa((struct in_addr) cli_addr.sin_addr),puerto);
+				//printf("Direccion del nuevo cliente: %s en el puerto %d \n",inet_ntoa((struct in_addr) cli_addr.sin_addr),puerto);
 				http_worker(sd_conn, (struct sockaddr *) &cli_addr,ruta);
 				return 0;
 
@@ -65,8 +66,6 @@ int main(int argc, char * const *argv) {
 				break;
 
 			default: // padre
-				printf("Inicio de Servidor en el puerto: %d",puerto);
-				
 				break;
 		} // fin switch
 		close(sd_conn);

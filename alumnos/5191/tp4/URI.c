@@ -1,10 +1,16 @@
 #include "http_worker.h"
 
-char *URI (char *buffer,char *archivo, char *mime, char *ruta){
+char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud){
+
+	int fd;
+	int leido;
 
 	char *buffer2 = malloc(1024*sizeof(char));
 	char *buffer3 = malloc(256*sizeof(char));
 	char *buffer4 = malloc(256*sizeof(char));
+	
+	char bufferleido[256];
+	memset(bufferleido,0,sizeof(bufferleido));
 
 	char *version = malloc(256*sizeof(char));
 	//char *cabecera = malloc(256*sizeof(char));
@@ -46,11 +52,48 @@ char *URI (char *buffer,char *archivo, char *mime, char *ruta){
 	buffer4 = strtok(NULL," ");
 	extension = buffer4;
 
+
+	/*
+	printf("ruta: %s\n",ruta);
 	printf("archivo2: %s\n",archivo2);
 	printf("version: %s\n",version);
 	printf("Extension: %s\n",extension);
+	*/
+
+	if (strcmp(extension,"html") == 0){
+			strncpy(mime,"text/html",256);
+	}
+
+	if (strcmp(extension,"jpg") == 0){
+			strncpy(mime,"image/jpeg",256);
+	}
+
+	if (strcmp(extension,"pdf") == 0){
+			strncpy(mime,"application/pdf",256);
+	}
+
+	if (strcmp(extension,"txt") == 0){
+			strncpy(mime,"text/plain",256);
+	}
+
+	if (strcmp(extension,"png") == 0){
+			strncpy(mime,"image/png",256);
+	}
+
+	strncpy(archivo,ruta,256);
+	strncat(archivo,archivo2,256);
+
+	//printf("archivo %s\n",archivo);
 
 
+	if ((fd = open(archivo,O_RDONLY)) != -1){ // si el archivo existe
+			
+		while ((leido = read(fd,bufferleido,sizeof(bufferleido))) > 0)
+
+			*longitud = *longitud + leido;
+			
+			close (fd);
+	}
 
 	return buffer2;
 }
