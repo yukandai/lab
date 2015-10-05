@@ -95,5 +95,5 @@ char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud){
 			close (fd);
 	}
 
-	return buffer2;
+	return version;
 }
