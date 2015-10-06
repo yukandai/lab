@@ -50,7 +50,8 @@ int main(int argc, char * const *argv)
 
 	printf ("Servidor HTTP\n");
 	printf ("Puerto: %d\n", puerto);
-
+	
+	signal(SIGCHLD, SIG_IGN);
 	sfd = socket (AF_INET,SOCK_STREAM,0);
 
 	if (sfd < -1){
@@ -83,9 +84,11 @@ int main(int argc, char * const *argv)
 	while( (acceptfd = accept(sfd, (struct sockaddr *)&direccion_cli,&direccion_cli_len)) > 0) {
 		switch (fork()) {
 			case 0: // hijo
+				close(sfd);
 				//http_worker(sd_conn, (struct sockaddr *) &cli_addr);
 				printf ("Direccion del nuevo cliente: %s en el puerto %d \n",inet_ntoa((struct in_addr) direccion_cli.sin_addr),puerto);
 				http_worker(acceptfd,ruta);
+				close(acceptfd);
 				return 0;
 
 			case -1: // error
@@ -94,10 +97,12 @@ int main(int argc, char * const *argv)
 				break;
 
 			default: // padre
+				//close(acceptfd);
 				break;
 		}
 		close(acceptfd);
 	}
 	//FIN DEL SERVIDOR
+	close(sfd);
 	return 0;
 }

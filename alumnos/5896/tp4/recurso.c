@@ -89,6 +89,9 @@ char *Recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ru
 
 		close (fd);
 	}
+	else{
+		perror("Error en open 1 recurso.c \n");
+	}
 
 	return nombre;
 

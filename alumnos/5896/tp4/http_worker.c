@@ -26,8 +26,9 @@ char *http_worker (int acceptfd, char *ruta)
 
 	char *nombre = malloc (256 * sizeof (char));
 
-	if ((leido = read (acceptfd, buffer, sizeof (buffer))) > 0)
+	if((leido = read (acceptfd, buffer, sizeof (buffer))) > 0)
 	{
+	//	printf("%s \n",buffer); 
 		memset (tipo, 0, sizeof tipo);
 		memset (archivo, 0, sizeof archivo);
 
@@ -36,18 +37,23 @@ char *http_worker (int acceptfd, char *ruta)
 		if (!(strncmp (buffer, "GET", 3) == 0))
 		{
 			estado = "HTTP/1.1 500 INTERNAL SERVER ERROR\n\nInternal Server error\n";
-			write (acceptfd, estado, strlen (estado));
-			exit (0);
+			if(write (acceptfd, estado, strlen (estado))<0){
+			perror("erorr en write 1 de  http_worker\n");
+			//exit (0);
+			return 0;
+		}
 
 		}
 
 
 		if ((fd = open (archivo, O_RDONLY)) < 0)
-		{
+		{	perror("error");
 			estado = "HTTP/1.1 404 NOT FOUND\n\nno esta el archivo\n";
-			write (acceptfd, estado, strlen (estado));
-			close (fd);
-
+			if(write (acceptfd, estado, strlen (estado))<0){
+			perror("Error en write 2 http_worker \n");
+			//close (fd);
+		return 0;
+			}
 
 		}
 		else
@@ -57,12 +63,15 @@ char *http_worker (int acceptfd, char *ruta)
 				snprintf (cabecera, sizeof cabecera,
 						"%s %s\nContent-Length: %ld\nContent-Type: %s\n\n",
 						version, estado, longitud, tipo);
-			write (acceptfd, cabecera, leido3);
-
+			if(write (acceptfd, cabecera, leido3)<0){
+				perror("Error en write 3 http_worker \n");
+			}
 			while ((leido3 = read (fd, buffer2, sizeof buffer2)) > 0)
 			{
 
-				write (acceptfd, buffer2, leido3);
+				if(write (acceptfd, buffer2, leido3)<0){
+				perror("Error en write 4 http_worker \n");
+				}
 				memset (buffer2, 0, sizeof buffer2);
 			}
 
@@ -73,8 +82,8 @@ char *http_worker (int acceptfd, char *ruta)
 		}
 	}				// fin if leido
 
-	close (fd);
-	close (acceptfd);
+	//close (fd);
+	//close (acceptfd);
 
 
 

@@ -60,7 +60,7 @@ char *ParserRuta(char *archivo){
 		strcpy (ruta,buf2);
 		strcat(ruta,buf);
 
-		//printf ("buff %s\n",buf3);
+		//printf ("buff %s\n",ruta);
 
 
 	}
