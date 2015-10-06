@@ -10,8 +10,7 @@
 
 #include "http_worker.h"
 
-int main(int argc, char * const *argv)
-{
+int main(int argc, char * const *argv){
 	int sd, sd_conn,opc=0;
 	int opt = 1, optlen = sizeof(opt); 
 	socklen_t addrlen;
@@ -46,13 +45,10 @@ int main(int argc, char * const *argv)
 	while( (sd_conn = accept(sd, (struct sockaddr *) &cli_addr, &addrlen)) > 0) {
 		switch (fork()) {
 			case 0: // hijo
-				//http_worker(sd_conn, (struct sockaddr *) &cli_addr);
-				http_worker(sd_conn);
+				http_worker(sd_conn, (struct sockaddr *) &cli_addr);
 				return 0;
-
 			case -1: // error
 				break;
-
 			default: // padre
 				break;
 		}
@@ -62,4 +58,3 @@ int main(int argc, char * const *argv)
 	perror("acept ()");
 	return 0;
 }
-

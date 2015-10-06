@@ -9,8 +9,7 @@
 		char ROOT[256];
 	} datos; 
 	
-//	void http_worker(int sd_conn,struct sockaddr * addr);
-	void http_worker(int sd_conn);
+	void http_worker(int sd_conn,void *addr);
 	int largo(char * arch_pedido);
 	datos d_con;
 

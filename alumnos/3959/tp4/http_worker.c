@@ -9,8 +9,7 @@
 #include "func.h"
 
 
-//void http_worker(int sd_conn, struct sockaddr * addr){
-void http_worker(int sd_conn){
+void http_worker(int sd_conn, void *addr){
 	char buf[4096]={0}, buf_arch[4096]={0}, arch_pedido[256]={0};
 	char out_msj[1024]={0},pedido[256]={0}, metodo[256]={0};		
 	int n,fd_arch,chk=0;
@@ -18,7 +17,6 @@ void http_worker(int sd_conn){
 	read (sd_conn, buf,sizeof buf);
 	arch_pedido[255]=0;
 	sscanf(buf, "%s /%s" ,metodo,arch_pedido);	//lee de buf con el formato indicado
-	
 	
 	strncpy(pedido,d_con.ROOT,strlen(d_con.ROOT));	
 	strcat(pedido, arch_pedido);			//completo la ruta del archivo pedido
