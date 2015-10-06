@@ -14,9 +14,20 @@
 
 #define SERVER_STRING "Server: tp4_mazz\r\n"
 
-void mensajes (int sock, int op){
+void mensajes (int sock, int op, char *tipo){
 
-    char buff[1024];
+    char buff[1024]; 
+    char tipo2[32];
+    char temp[32];
+
+    memcpy (tipo2, tipo, strlen (tipo));
+    //tipo2[strlen(tipo2) -1]
+               
+
+
+
+    //write (STDOUT_FILENO, tipo2, strlen (tipo2));
+    
     switch (op){
         case 505:
             sprintf(buff, "HTTP/1.0 505 INTERNAL SERVER ERROR \r\n");
@@ -44,11 +55,17 @@ void mensajes (int sock, int op){
             write(sock, buff, strlen(buff));
             sprintf(buff, SERVER_STRING);
             write(sock, buff, strlen(buff));
-            sprintf(buff, "Content-Type: text/html\r\n");
+            sprintf (buff, "Content-type: ");
+            write(sock, buff, strlen(buff));
+            strcpy (buff, tipo2);
+            write (sock, buff, strlen (tipo2));
+            sprintf (buff, "\r\n");            
+            write (sock, buff, strlen (buff));
+            sprintf(buff, "Transfer-Encoding: chunked\r\n");
             write(sock, buff, strlen(buff));
             sprintf (buff, "\r\n");
             write (sock, buff, strlen(buff));
-        break;
+    break;
 
 
         case 404:

@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-g #-Wall
 #LDFLAGS=-lpthread -lrt
 TARGETS=tp4
-FILES=main.c http_worker.c etc.c parse_and_frac.c mensajes.c ext_arch.c
+FILES=main.c http_worker.c etc.c parse_and_frac.c mensajes.c ext_arch.c get_mime.c
 DE= http_worker.h etc.h
 
 all: $(TARGETS)

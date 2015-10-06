@@ -12,15 +12,16 @@
 #include "etc.h"
 
 
-void http_worker (int sock,  struct sockaddr* cli_addr){
+int http_worker (int sock,  struct sockaddr* cli_addr){
 
-    char buff[1024];
-    char method[255];
-    char url[255];
-    char path[512];
+    char buff[1024]="";
+    char method[255]="";
+    char url[255]="";
+    char path[512]="";
+    char tipo[32]="";
     struct size req_size;
     struct stat st;       
-    int leido;
+    int leido=0;
 
     req_size.buff=sizeof (buff);           
     req_size.method_url=sizeof (url); //envio estructura con tamaños a función ya que 
@@ -29,27 +30,24 @@ void http_worker (int sock,  struct sockaddr* cli_addr){
 
     
     leido = get_line(sock, buff, sizeof (buff));//lee primera linea de respuesta (método y URL)
-    parse_and_frac (&req_size, buff, method, url);//busco URL y Método
+    parse_and_frac (&req_size, buff, method, url, tipo);//busco URL y Método
     
     if (strcasecmp (method, "GET") == 0){
     
-        ext_arch (sock, &req_size, url, path);
+        ext_arch (sock, &req_size, url, path, tipo);
 
     }else{
-        mensajes (sock, 505);
+        mensajes (sock, 505, "");
     }
                                                                
-   /* write (STDOUT_FILENO, method, strlen (method));
-    write (STDOUT_FILENO, url, strlen (url));*/
+   //write (STDOUT_FILENO, method, strlen (method));
+   //write (STDOUT_FILENO, tipo, strlen (tipo));
     
     /*--Cerrando conexión a socket--*/
 
     shutdown (sock, SHUT_WR);
-    //while (leido>0){
-       // leido=read (sock, buff, 1);
-    //}
     close (sock);
-
+    return 0;
     /*-------------------------------*/  
 
 }

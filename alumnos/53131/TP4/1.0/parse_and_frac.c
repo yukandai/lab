@@ -12,9 +12,11 @@
 #include "etc.h"
 
 
-void parse_and_frac (struct size *req_size, char *buff, char *method, char *url ){
+void parse_and_frac (struct size *req_size, char *buff, char *method, char *url , char *type){
 
     size_t i=0, j=0;
+    char url_ptr[32];
+    int size;
 
     while ((!isspace(buff[j])) && (i < (req_size->method_url- 1))){ //Busco METODO en mensaje HTTP
         method[i] = buff[j];
@@ -32,5 +34,13 @@ void parse_and_frac (struct size *req_size, char *buff, char *method, char *url 
         url[i] = buff[j];
         i++; j++;                                    
     }
-    url[i]='\0';
+    url[i]='\0'; 
+    strncpy (url_ptr, url, strlen (url));
+    size=strlen (url);
+    get_mime (url_ptr, size, &type);  //busca MIME type          
+
+
+
+
+
 }

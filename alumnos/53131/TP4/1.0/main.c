@@ -33,7 +33,7 @@ int main(int argc, char * const *argv)
         exit (-1);
     }
 
-    if ((listen (sd, 10))<0){
+    if ((listen (sd, 20))<0){
         perror ("Listen:");
         exit (-1);
     }
