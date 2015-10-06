@@ -6,10 +6,12 @@
 	#define OK_TXT    "HTTP/1.0 200 OK\nContent-Type:text/plain\nContent-Length:%d\n\n"
 	#define OK_PDF     "HTTP/1.0 200 OK\nContent-Type:application/pdf\nContent-Leng:%d\n\n"
 
-	#define NOTOK_404   "HTTP/1.1 404 Not Found\nContent-Type:text/html\n\n"
+	#define NOTOK_404   "HTTP/1.0 404 Not Found\nContent-Type:text/html\n\n"
 	#define MESS_404    "<html><body><h1>FILE NOT FOUND</h1></body></html>"
-	#define NOTOK_500   "HTTP/1.1 500 Internal Server Error\nContent-Type:text/html\n\n" //Cuando muestro el msj?
+	#define NOTOK_500   "HTTP/1.0 500 Internal Server Error\nContent-Type:text/html\n\n"
 	#define MESS_500    "<html><body><h1>Internal Server Error</h1></body></html>"
+	#define NOTOK_501   "HTTP/1.0 501 Not Implemented\nContent-Type:text/html\n\n"
+	#define MESS_501    "<html><body><h1>Not Implemented</h1></body></html>"
 	#define HTTP_V	"HTTP/1.0"
 
 #endif
