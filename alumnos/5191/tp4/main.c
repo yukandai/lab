@@ -25,7 +25,7 @@ int main(int argc, char * const *argv) {
 	} // fin while
 
 	if (ruta == NULL){
-		perror("Error en la ruta");
+		write (STDERR_FILENO , "Error en la ruta\n",17 );
 		return -1;
 	}
 	/* TODO: agregar creación y configuración del socket */

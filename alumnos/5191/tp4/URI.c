@@ -49,8 +49,14 @@ char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud){
 	strncpy(extensionaux,archivo2,strlen(archivo2));
 
 	buffer4 = strtok(extensionaux,".");
+	//printf("1-buffer 4 %s\n",buffer4);
 	buffer4 = strtok(NULL," ");
-	extension = buffer4;
+	//printf("2-buffer 4 %s\n",buffer4);
+	if (buffer4 == NULL){
+	extension = "error";
+	}else {
+		extension = buffer4;
+	}
 
 
 	/*
@@ -78,6 +84,10 @@ char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud){
 
 	if (strcmp(extension,"png") == 0){
 			strncpy(mime,"image/png",256);
+	}
+
+	if (strcmp(extension,"error") == 0){
+		strncpy(mime,"error",256);
 	}
 
 	strncpy(archivo,ruta,256);
