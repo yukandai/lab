@@ -13,7 +13,7 @@ void padre(datos * d) {
         if ( leido <= 0)
             break;
         
-        printf("padre: %s\n", d->mem);
+        printf("PADRE: %s\n", d->mem);
         sem_post(d->semH);
     }
 }
