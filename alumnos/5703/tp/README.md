@@ -1,4 +1,4 @@
-##Información
+##Carpeta de Trabajos Prácticos
 
 ```
 Alumno: Germán Moyano
