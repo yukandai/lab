@@ -24,23 +24,13 @@ int http_worker(int sd_conn, struct sockaddr* addr){
 	
 	tok = strtok(buff, " ");
 		        
-	if((strncmp("GET", tok,3))==0){
+	if(strncmp("GET", tok,3)==0){
 		nomArchivo = strtok(NULL, " ");
 		printf("En el servidor: %s\n\n",direccion);
 		                
 		hijo(sd_conn, nomArchivo, &direccion[0]);
 		                
 		printf("\nSALI DEL HIJO\n"); 
-	}
-
-	else if(!(strncmp("GET", tok,3))==0){
-		
-		char *estado;		
-		estado = "HTTP/1.1 500 INTERNAL SERVER ERROR\n\nInternal Server error\n";
-		write (sd_conn, "HTTP/1.1 500 INTERNAL SERVER ERROR\n\nInternal Server error\n", strlen (estado));
-		printf("\nMETODO NO IMPLEMENTADO\n");
-
-
 	}
 	return 0;
 }
