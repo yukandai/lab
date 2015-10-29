@@ -17,8 +17,8 @@ int hijo(int sd_conn, char* nomArchivo, char* direccion){
         
         if((txt = open(direccion, O_RDWR, S_IRWXU))<0){
                 perror("ERROR en el hijo:Error en open: ");
-		write(sd_conn,"HTTP/1.1 404 Not Found\r\n", 24); 
-
+		//write(sd_conn,"HTTP/1.1 404 Not Found\r\n\n no esta el archivo", 48); 
+                write(sd_conn,"HTTP/1.1 404 NOT FOUND\n\nno esta el archivo\n", 46);
 		return 0;
 	}
 	

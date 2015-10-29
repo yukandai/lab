@@ -34,10 +34,13 @@ int main(int argc, char * const *argv)
 
 	printf("Estoy por entrar al servidor: %s\nY mi puerto es: %d\r\n\n",ip ,port);
 
+	signal(SIGCHLD, SIG_IGN);
 	while( (sd_conn = accept(sd, (struct sockaddr *) &cli_addr, &addrlen)) > 0) {
 		switch (fork()) {
 			case 0: // hijo
+				close(sd);
 				http_worker(sd_conn, (struct sockaddr *) &cli_addr);
+				close (sd_conn);
 				return 0;
 
 			case -1: // error
