@@ -14,7 +14,7 @@ test: tp3
 
 
 test2: tp3
-	ls -l | ./tp3 -p hola,mono,franco
+	ls -l | ./tp3 -p hola,mono,franco,enunciado
 
 
 test3: tp3
