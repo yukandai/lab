@@ -19,12 +19,23 @@
 
 #include <pthread.h>
 
+#define RES_LEN 256
+
+typedef struct http_req {
+	char method[6];
+	char resource[RES_LEN];
+	char version[10];	
+} http_req_t;
+
+char *ruta;
 
 void nombre_ruta(char **nombre);
 
 int create_socket(char *puerto,int opt,int optlen);
 
 void *http_worker(void *sd_conn);
-//char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud);
+
+char *archivo_extension(char *resource);
+
 
 #endif

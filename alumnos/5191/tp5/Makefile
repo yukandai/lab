@@ -6,7 +6,7 @@ all: $(TARGETS)
 # objetivo: dependencias
 #	reglas ( tab )
 
-tp5: main.c ruta.c http_worker.c create_socket.c
+tp5: main.c ruta.c http_worker.c create_socket.c archivo_extension.c
 	$(CC) $(CFLAGS) -o $@ $^ -pthread
 
 

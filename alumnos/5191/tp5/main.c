@@ -23,7 +23,7 @@ int main(int argc, char * const *argv) {
 	pthread_attr_setdetachstate(&atributos,PTHREAD_CREATE_DETACHED);
 	//
 
-	while ((opcion = getopt(argc,argv, "d:")) != -1){
+	while ((opcion = getopt(argc,argv, "d:")) >= 0){
 		switch (opcion){
 			case 'd':  // ruta
 				nombre_ruta(&ruta);	
@@ -40,12 +40,9 @@ int main(int argc, char * const *argv) {
 	sd = create_socket(puerto,opt,optlen);
 
 
-	while( (sd_conn = accept(sd, (struct sockaddr *) &cli_addr, &addrlen)) > 0) {
-		//pthread_create(&tid,&attr, http_worker, (void *)&sd_conn);
-		//datos_array[sd_conn].socketfd = sd_conn;
-		//pthread_create (&tid,&atributos, http_worker, (void *) &datos_array[sd_conn]);				
+	while( (sd_conn = accept(sd, (struct sockaddr *) &cli_addr, &addrlen)) > 0) {		
 		pthread_create (&tid,&atributos, http_worker, (void *)&sd_conn); 
-	} // fin while
+	} 
 	close(sd_conn);
 
 	free(ruta);
