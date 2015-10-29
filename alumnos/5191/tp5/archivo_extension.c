@@ -9,13 +9,12 @@ char *archivo_extension(char *resource){
 	strncpy(buffer,resource,strlen(resource));
 
 	validar_punto = strchr( buffer, '.' ); 
+	
 	if (validar_punto == NULL){
-		ext = "error";
+		ext = NULL;
 	} else {
 		ext = strtok(buffer, ".");
-		//printf("\n111--------%s\n",ext);
 		ext = strtok(NULL, " ");
-		//printf("\n--------%s\n",ext);
 	}
 	
 	return ext;

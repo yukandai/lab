@@ -15,6 +15,7 @@ void *http_worker(void *sd_conn_no_cast){
 	char *token = NULL;
 
 	char *extension = NULL;
+	char *mime = NULL;
 
 	if ((leido = read(sd_conn, buffer, sizeof(buffer))) > 0){
 		
@@ -35,10 +36,24 @@ void *http_worker(void *sd_conn_no_cast){
 		extension = archivo_extension(req->resource);
 
 		printf("4 - %s\n",extension);
+
+		if (extension == NULL){
+			// error por stdout ...	
+		}
+
+		// buscar mime 
+		//buscar_mime()
+		// abrir archivo para su lectura
+
+		// armar cabecera
+		// escribir en el socket los estados correspondientes
+
+		// cerrar hilo ( pthread_exit(NULL))
+		
 	} // fin if leido
 
 	
 
-
+// free req 
 	exit(0);	
 } // fin funcion
