@@ -19,7 +19,7 @@ int main(int argc, char * const *argv) {
 	while ((opcion = getopt(argc,argv, "d:")) != -1){
 		switch (opcion){
 			case 'd':  // ruta
-				NombreRuta(&ruta);	
+				nombre_ruta(&ruta);	
 				break;
 		} // fin switch
 	} // fin while
@@ -71,6 +71,7 @@ int main(int argc, char * const *argv) {
 		close(sd_conn);
 	} // fin while
 
+	free(ruta);
 	return 0;
 } // fin main
 

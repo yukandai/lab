@@ -20,7 +20,7 @@
 
 void http_worker(int sd_conn, struct sockaddr *, char *ruta);
 
-void NombreRuta(char **nombre);
+void nombre_ruta(char **nombre);
 
 char *URI (char *buffer,char *archivo, char *mime, char *ruta, long *longitud);
 
