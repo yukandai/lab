@@ -1,6 +1,6 @@
 #include "header.h"
 
-char *Recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ruta)
+char *recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ruta)
 {
 
 	int leido;

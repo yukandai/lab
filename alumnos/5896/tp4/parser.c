@@ -1,6 +1,6 @@
 #include "header.h"
 
-void NombreArchivo(char **nombre){
+void nombre_archivo(char **nombre){
 
 	*nombre = malloc( sizeof( char) * strlen( optarg)); //reservamos el tamaño del nombre del archivo de configuracion
 	strcpy( *nombre, optarg);
@@ -8,7 +8,7 @@ void NombreArchivo(char **nombre){
 }
 
 
-int ParserPuerto(char *archivo){
+int parser_puerto(char *archivo){
 
 	char buffer[800];
 	memset(buffer,0,800);
@@ -32,7 +32,7 @@ int ParserPuerto(char *archivo){
 
 } // fin funcion ParserPuerto
 
-char *ParserRuta(char *archivo){
+char *parser_ruta(char *archivo){
 
 	char buffer[800];
 	memset(buffer,0,800);

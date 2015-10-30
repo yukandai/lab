@@ -20,15 +20,15 @@
 
 
 
-void NombreArchivo(char **nombre); //parser.c
+void nombre_archivo(char **nombre); //parser.c
 
-int ParserPuerto(char *archivo); //parser.c
+int parser_puerto(char *archivo); //parser.c
 
-char *ParserRuta(char *archivo); //parser.c
+char *parser_ruta(char *archivo); //parser.c
 
 char *http_worker(int acceptfd,char *ruta);
 
-char *Recurso (char *buffer,char *archivo, char *tipo, long * longitud, char *ruta);
+char *recurso (char *buffer,char *archivo, char *tipo, long * longitud, char *ruta);
 
 
 

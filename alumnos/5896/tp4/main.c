@@ -16,7 +16,7 @@ int main(int argc, char * const *argv)
 		switch (opcion){
 
 			case 'd':  // Abrir archivo .conf
-				NombreArchivo(&archivoConfig);	
+				nombre_archivo(&archivoConfig);	
 				break;
 
 		} // cierre switch
@@ -30,8 +30,8 @@ int main(int argc, char * const *argv)
 
 
 	//declaro puerto y ruta
-	puerto = ParserPuerto(archivoConfig); //funciones.c devuelve el puerto
-	ruta = ParserRuta(archivoConfig);//funciones.c devuelve la ruta
+	puerto = parser_puerto(archivoConfig); //funciones.c devuelve el puerto
+	ruta = parser_ruta(archivoConfig);//funciones.c devuelve la ruta
 	//fin de declarar puerto y ruta
 
 

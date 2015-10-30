@@ -32,7 +32,7 @@ char *http_worker (int acceptfd, char *ruta)
 		memset (tipo, 0, sizeof tipo);
 		memset (archivo, 0, sizeof archivo);
 
-		nombre = Recurso (buffer, archivo, tipo, &longitud, ruta);
+		nombre = recurso (buffer, archivo, tipo, &longitud, ruta);
 
 		if (!(strncmp (buffer, "GET", 3) == 0))
 		{
