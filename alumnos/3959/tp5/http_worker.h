@@ -9,6 +9,8 @@
 		char ROOT[5];
 	} datos; 
 	
-	void http_worker(int sd_conn,void *addr);
+	void * http_worker (void *fd_con);
 	int create_socket(datos * d_con);
+	datos d_con;
+	
 #endif

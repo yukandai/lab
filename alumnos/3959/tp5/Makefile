@@ -1,10 +1,10 @@
 CFLAGS= -g -Wall
-LDLIBS=-lrt 
+LDLIBS=-lrt -pthread
 CC:=gcc
 TARGETS= server 
 
 all: clean $(TARGETS)
-server: main.c create_socket.c
+server: main.c create_socket.c http_worker.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 .PHONY: test

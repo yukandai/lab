@@ -4,16 +4,17 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
+#include <pthread.h>
 #include "http_worker.h"
 #include "func.h"
 
-
-void http_worker(int sd_conn, void *addr){
+void * http_worker (void * fd_con){
+	int sd_conn = (int)fd_con;
 	char buf[4096]={0}, buf_arch[4096]={0}, arch_pedido[256]={0};
 	char out_msj[1024]={0},pedido[256]={0}, metodo[256]={0};		
 	int n,fd_arch,chk=0;
 
+	pthread_detach(pthread_self());
 	read (sd_conn, buf,sizeof buf);
 	arch_pedido[255]=0;
 	sscanf(buf, "%s /%s" ,metodo,arch_pedido);	//lee de buf con el formato indicado
@@ -66,8 +67,7 @@ void http_worker(int sd_conn, void *addr){
 		write(sd_conn,out_msj, strlen(out_msj));
 		strcpy(out_msj,MESS_501);
 		write(sd_conn,out_msj, strlen(out_msj));
-		
 	}
-
 	close (sd_conn);
+	pthread_exit(NULL);
 }
