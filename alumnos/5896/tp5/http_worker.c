@@ -63,12 +63,12 @@ void *http_worker(atributos_t *atributos)
 						"%s %s\nContent-Length: %ld\nContent-Type: %s\n\n",
 						version, estado, longitud, tipo);
 			write (acceptfd, cabecera, leido3);
-			
+
 			while ((leido3 = read (fd, buffer2, sizeof buffer2)) > 0)
 			{
 
 				write (acceptfd, buffer2, leido3);
-				
+
 				memset (buffer2, 0, sizeof buffer2);
 			}
 
@@ -85,9 +85,9 @@ void *http_worker(atributos_t *atributos)
 	printf("La cantidad de hilos es%d \n", atributos->cantHilos);
 	pthread_exit(NULL);
 
-//	free(nombre);
-//	free(buf);
-//	free(ext);
+	//	free(nombre);
+	//	free(buf);
+	//	free(ext);
 
 	return nombre;
 

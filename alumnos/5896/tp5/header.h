@@ -31,24 +31,24 @@ char *parser_ruta(char *archivo); //parser.c
 char *recurso (char *buffer,char *archivo, char *tipo, long * longitud, char *ruta);
 
 typedef struct{
-                  char* route;
-  
-                  int fdsocket;
-                  int acceptfd;
-                  int id; //id hilo
-  
-          //      struct sockaddr_in addr_cli;
-  
-          //      struct sockaddr_in addr_srv;
-  
-                  int cantHilos;
-  
-          }atributos_t;
-  
-  
-  
-  void * http_worker(atributos_t *);
-  
+	char* route;
+
+	int fdsocket;
+	int acceptfd;
+	int id; //id hilo
+
+	//      struct sockaddr_in addr_cli;
+
+	//      struct sockaddr_in addr_srv;
+
+	int cantHilos;
+
+}atributos_t;
+
+
+
+void * http_worker(atributos_t *);
+
 
 
 

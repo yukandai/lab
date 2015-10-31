@@ -92,9 +92,9 @@ char *recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ru
 	else{
 		perror("Error en open 1 recurso.c \n");
 	}
-//	free(buf);
-//	free(ext);
-//	free(nombre);
+	//	free(buf);
+	//	free(ext);
+	//	free(nombre);
 	return nombre;
 
 }				// fin funcion
