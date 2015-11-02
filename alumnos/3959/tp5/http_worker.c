@@ -10,18 +10,17 @@
 
 void * http_worker (void * fd_con){
 	int sd_conn = (int)fd_con;
-	char buf[4096]={0}, buf_arch[4096]={0}, arch_pedido[256]={0};
-	char out_msj[1024]={0},pedido[256]={0}, metodo[256]={0};		
+	pthread_detach(pthread_self());
+
+	char buf[BUF_REQ]={0}, buf_arch[BUF_ARCH]={0}, arch_pedido[BUF_NBR_ARCH]={0};
+	char out_msj[BUF_ARCH]={0},pedido[BUF_ARCH]={0}, metodo[4]={0};		
 	int n,fd_arch,chk=0;
 
-	pthread_detach(pthread_self());
 	read (sd_conn, buf,sizeof buf);
-	arch_pedido[255]=0;
 	sscanf(buf, "%s /%s" ,metodo,arch_pedido);	//lee de buf con el formato indicado
-	
 	strncpy(pedido,d_con.ROOT,strlen(d_con.ROOT));	
 	strcat(pedido, arch_pedido);			//completo la ruta del archivo pedido
-	printf("sd_conn: %d \t pedido:%s \n",sd_conn,pedido);
+
 	if((strncmp("GET",metodo,3)==0)){
 		if((fd_arch=open(pedido,O_RDONLY,0666))==-1){
 			strcpy(out_msj,NOTOK_404);
@@ -54,20 +53,21 @@ void * http_worker (void * fd_con){
 				while((n=read(fd_arch,buf_arch, sizeof buf_arch))>0){
 					write(sd_conn,buf_arch,n);
 				}
+				close (fd_arch);
 			}else{
 				strcpy(out_msj,NOTOK_500);
 				write(sd_conn,out_msj, strlen(out_msj));
 				strcpy(out_msj,MESS_500);
 				write(sd_conn,out_msj, strlen(out_msj));
 			}
-		close (fd_arch);
 		}
 	}else{
 		strcpy(out_msj,NOTOK_501);
 		write(sd_conn,out_msj, strlen(out_msj));
 		strcpy(out_msj,MESS_501);
 		write(sd_conn,out_msj, strlen(out_msj));
-	}
+	} 
 	close (sd_conn);
+	sem_post(&sem_thr);
 	pthread_exit(NULL);
 }

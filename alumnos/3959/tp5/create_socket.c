@@ -39,6 +39,6 @@ int create_socket (datos * d_con)
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
-//	freeaddrinfo(result);
+	freeaddrinfo(result);
 	return sfd;
 }
