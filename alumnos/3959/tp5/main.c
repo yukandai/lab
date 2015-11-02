@@ -10,7 +10,7 @@
 #include <signal.h>
 #include "http_worker.h"
 
-pthread_t t_id[CONCUR];		//usar un calloc para esta var global
+pthread_t t_id[CONCUR];
 int main(int argc, char * const *argv){
 	int sd, sd_conn, rc, val, sem_h, opc=0;
 
