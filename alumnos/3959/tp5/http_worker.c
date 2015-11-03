@@ -10,6 +10,7 @@
 
 void * http_worker (void * fd_con){
 	int sd_conn = (int)fd_con;
+	if((pthread_mutex_unlock(&mtx))!=0){perror("MUTEX UNLOCK");}
 	pthread_detach(pthread_self());
 
 	char buf[BUF_REQ]={0}, buf_arch[BUF_ARCH]={0}, arch_pedido[BUF_NBR_ARCH]={0};

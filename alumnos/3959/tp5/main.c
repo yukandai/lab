@@ -10,6 +10,7 @@
 #include <signal.h>
 #include "http_worker.h"
 
+pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 pthread_t t_id;
 int main(int argc, char * const *argv){
 	int sd, sd_conn, rc, opc=0;
@@ -25,10 +26,12 @@ int main(int argc, char * const *argv){
 	sd = create_socket(&d_con);		 //creo el socket
 	signal(SIGPIPE,SIG_IGN);
 	while((sd_conn = accept(sd,NULL,0))>0){
+		if((pthread_mutex_lock(&mtx))!=0){perror("MUTEX LOCK");}
 		if((rc=pthread_create(&t_id,NULL,http_worker,(void *) sd_conn))!=0){
 			perror("pthread_create fail");
 			}
 	}
+	pthread_mutex_destroy(&mtx);
 	close(sd);
 	perror("acept ()");
 	return 0;

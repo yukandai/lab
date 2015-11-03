@@ -14,4 +14,5 @@
 	void * http_worker (void * fd_con);
 	int create_socket(datos * d_con);
 	datos d_con;
+	extern pthread_mutex_t mtx;
 #endif
