@@ -68,6 +68,5 @@ void * http_worker (void * fd_con){
 		write(sd_conn,out_msj, strlen(out_msj));
 	} 
 	close (sd_conn);
-	sem_post(&sem_thr);
 	pthread_exit(NULL);
 }
