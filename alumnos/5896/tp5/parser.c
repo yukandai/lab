@@ -1,9 +1,9 @@
 #include "header.h"
 
-void nombre_archivo(char **nombre){
+void nombre_archivo(char **nombrearchivo){
 
-	*nombre = malloc( sizeof( char) * strlen( optarg)); //reservamos el tamaño del nombre del archivo de configuracion
-	strcpy( *nombre, optarg);
+	*nombrearchivo = malloc( sizeof( char) * strlen( optarg)); //reservamos el tamaño del nombre del archivo de configuracion
+	strcpy( *nombrearchivo, optarg);
 
 }
 
@@ -47,7 +47,7 @@ char *parser_ruta(char *archivo){
 
 	char *buf2 = "/";
 
-	char *ruta = malloc(300*sizeof(char));
+	char *rutaparser = malloc(300*sizeof(char));
 
 
 	if ( strncmp (buffer, "droot", 5 )) {		
@@ -57,15 +57,16 @@ char *parser_ruta(char *archivo){
 		buf = strtok( NULL, "\n" );  
 		//printf("\n\%sn",buf); 
 
-		strcpy (ruta,buf2);
-		strcat(ruta,buf);
+		strcpy (rutaparser,buf2);
+
+		strcat(rutaparser,buf);
 
 		//printf ("buff %s\n",ruta);
 
 
 	}
 
-	return ruta;
+	return rutaparser;
 
 
 } // fin funcion ParserRuta

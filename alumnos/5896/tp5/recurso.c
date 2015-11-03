@@ -2,12 +2,11 @@
 
 char *recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ruta)
 {
-
+//	extern pthread_mutex_t exc;
+//	pthread_mutex_lock(&exc);
 	int leido;
 	int fd;
 
-	//char *buffer2 = malloc (80000 * sizeof (char));
-	// strcpy (buffer2, buffer);
 
 	char archivoaux[256];		//para parsear la ext
 	memset (archivoaux, 0, sizeof archivoaux);
@@ -20,8 +19,8 @@ char *recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ru
 
 	char *archivo3;
 
-	char *buf = malloc (256 * sizeof (char));	//para nombre
-	char *ext = malloc (256 * sizeof (char));	//para extension
+	char *buf  = malloc (256 * sizeof (char));	//para nombre
+	char *ext  = malloc (256 * sizeof (char));	//para extension
 
 	char *nombre = malloc (256 * sizeof (char));	// nombre del archivo
 
@@ -79,6 +78,8 @@ char *recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ru
 
 	strcpy (archivo, archivo3);
 
+//	pthread_mutex_lock(&exc);
+
 
 	if ((fd = open (archivo, O_RDONLY)) != -1)
 	{				// si el archivo existe
@@ -92,9 +93,11 @@ char *recurso (char *buffer, char *archivo, char *tipo, long *longitud, char *ru
 	else{
 		perror("Error en open 1 recurso.c \n");
 	}
-	//	free(buf);
-	//	free(ext);
-	//	free(nombre);
-	return nombre;
+// pthread_mutex_unlock(&exc);
 
+//	free(buf);
+//	free(ext);
+//	free(nombre);
+	return nombre;
+//pthread_mutex_unlock(&exc);
 }				// fin funcion
