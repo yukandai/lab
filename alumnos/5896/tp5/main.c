@@ -2,7 +2,7 @@
 //pthread_mutex_t exc;
 pthread_mutex_t exc;
 int main(int argc, char * const *argv)
-	{
+{
 	pthread_mutex_init (&exc , NULL );
 	int opcion;
 	char *ruta;
@@ -34,7 +34,7 @@ int main(int argc, char * const *argv)
 	puerto = parser_puerto(archivoConfig); //funciones.c devuelve el puerto
 	ruta = parser_ruta(archivoConfig);//funciones.c devuelve la ruta
 	//fin de declarar puerto y ruta
-	
+
 
 
 	//int fdsocket;
