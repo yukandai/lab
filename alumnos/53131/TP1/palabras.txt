@@ -1,8 +1,0 @@
-Aprender
-Tips
-Entrega
-aplicación
-cat
-Makefile
-filtrado
-dividir
