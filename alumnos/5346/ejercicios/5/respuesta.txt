@@ -1,4 +1,0 @@
-Ejercicio 5
-
-La variable numero toma distintos valores ya q los hilos se ejecutan dependiendo el orden q le asigna
-el planificador del sistema operativo.
