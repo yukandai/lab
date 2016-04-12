@@ -1,0 +1,7 @@
+html	text/html
+txt	text/plain
+jpg	image/jpeg
+pdf	application/pdf
+
+
+
