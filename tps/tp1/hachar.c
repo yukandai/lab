@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     char *buff;
     int mem_size, file_size;
     struct opts o;
-    int fdi, fd;
+    int fdin, fd;
     char filename[60];
     int i;
     int ret = 0;
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
         GOTO_ERR(2, "get_filesize()");
     }
 
-    if ((fdi = open(o.filename, O_RDONLY)) < 0) {
+    if ((fdin = open(o.filename, O_RDONLY)) < 0) {
         GOTO_ERR(3, "open()");
     }
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     }
 
     for (i = 0; i < o.nparts; i++) {
-        if ((nread = read(fdi, buff, mem_size)) < 0) {
+        if ((nread = read(fdin, buff, mem_size)) < 0) {
             GOTO_ERR(5, "read()");
         }
     
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 
 error:
     if (fd > 0) close(fd);
-    if (fdi > 0) close(fdi); 
+    if (fdin > 0) close(fdin); 
     if (buff) free(buff);
     return ret;
 }
