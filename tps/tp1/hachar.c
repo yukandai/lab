@@ -93,21 +93,28 @@ error:
 int set_opts(int argc, char **argv, struct opts *o)
 {
     int opt;
+    int flags_cnt = 0;
 
     while ((opt = getopt(argc, argv, "n:f:")) != -1) {
         switch (opt) {
             case 'n':
                 o->nparts = atoi(optarg);
+                flags_cnt++;
                 break;
 
             case 'f':
                 memset(o->filename, 0, sizeof o->filename);
                 strncpy(o->filename, optarg, sizeof o->filename);
+                flags_cnt++;
                 break;
 
             default: /* '?' */
                 return -1;
         }
+    }
+
+    if (flags_cnt != 2) {
+        return -1;
     }
 
     return 0;
