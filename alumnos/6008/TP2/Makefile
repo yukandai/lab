@@ -1,6 +1,4 @@
 # Computación II: TP2: Comunicación entre procesos con pipes. 
-# <federico.hernandez@um.edu.ar>
-# <carlos.taffernaberry@um.edu.ar>
 
 CC=gcc
 CFLAGS=-g -Wall
