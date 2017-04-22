@@ -4,36 +4,24 @@
 int
 main (int argc, char **argv)
 {
-    char mensajeBuffer[17] = "El buffer tiene: ";
-    char mensajeAnterior[16] = "El anterior es: ";
-	char mensajePalabras[17] = "Palabras leidas: ";
-    char mensajeOraciones[18] = "Oraciones leidas: ";
-    char mensajeEspacios[22] = "Cantidad de espacios: ";
-    char valores[3];
     char buffer[1];
 	char anterior[1] = {'1'};
-	int readed = 1, palabra = 0, oraciones = 0, espacios = 0;
+	int readed = 1, palabras = 0, oraciones = 0, espacios = 0;
 
-    while (read(0, buffer, 1)) {
-    	/*
-        write(1,mensajeBuffer, strlen(mensajeBuffer));
-        write(1, buffer, 1);
-        write(1, "\n", 1);
-		write(1, mensajeAnterior, strlen(mensajeAnterior)); 
-        write(1, anterior 1);
-        write(1, "\n", 1);
-        */
-        printf("El buffer tiene: %s y el anterior: %s\n", buffer, anterior);
-        *anterior = *buffer;
-/*	
+    while ((readed = read(0, buffer, 1))) {
+    write(1, "El buffer es: ", 14);
+    write(1, buffer, 1);
+    write(1, "\n", 1);   
+    write(1, "El anterior es: ", 16);
+    write(1, anterior, 1);
+    write(1, "\n", 1);
         //Cuenta las palabras    
 		if (*buffer == ' ' || *buffer == '.' || *buffer == ',' || *buffer == '(' || *buffer == ')' || *buffer == '\n') {
-			palabra++;
+			palabras++;
 			if (*anterior == ' ' || *anterior == '.' || *anterior == ',' || *anterior == '(' || *anterior == ')' || *anterior == '\n' || *anterior == '1') {
-				palabra--;
+				palabras--;
 			}
 		}
-
         //Cuenta las oraciones
 		if (*buffer == '.') {
 			oraciones++;
@@ -43,28 +31,15 @@ main (int argc, char **argv)
 		}
 
         //Cuenta los espacios
-    	if (*buffer == '\n') {
+    	if (*buffer == '\n' || *buffer == ' ') {
 			espacios++;
-		}
+		}	
+    *anterior = *buffer;
 
-	
-        *anterior = *buffer;
-	*/
     }
-    /*
-    valores[0] = palabra;
-    valores[1] = oraciones;
-    valores[2] = espacios;
+    printf("Cantidad de palabras: %d\n", palabras);
+    printf("Cantidad de oraciones: %d\n", oraciones);
+    printf("Cantidad de espacios: %d\n", espacios); 
     //Imprimo las estadisticas
-    write(1, mensajePalabras, strlen(mensajePalabras));
-    write(1, valores[0], 1);
-    write(1, "\n", 1);
-    write(1, mensajeOraciones, strlen(mensajeOraciones));
-    write(1, valores[1], 1);
-    write(1, "\n", 1);
-    write(1, mensajeEspacios, strlen(mensajeEspacios));
-    write(1, valores[2], 1);
-    write(1, "\n", 1);
-    */
 	return (0);	
 }
