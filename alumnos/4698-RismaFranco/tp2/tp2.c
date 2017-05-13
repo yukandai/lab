@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define debug 1
+#define debug 0
 
 int main(int argc, char **argv) {
 
@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
 	// Child pipes
 	int pipe1fd[2];
   	int pipe2fd[2];
+  	int pipe3fd[2];
 
     // Handle options
   	optionsHandler(argc,argv,conf);
@@ -28,8 +29,12 @@ int main(int argc, char **argv) {
     Pipe(pipe2fd);
 	if (debug) puts("Pipe 2 created");
 	
+	// Create 2nd pipe
+    Pipe(pipe3fd);
+	if (debug) puts("Pipe 2 created");
+
     // Fork
-    doWork(conf, pipe1fd, pipe2fd);
+    doWork(conf, pipe1fd, pipe2fd, pipe3fd);
 
 	/*
     //Father

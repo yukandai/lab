@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#define debug 0
+
 void readAndPassItOn (configuration *conf, int writeDescriptors []) {
 
 	int nread = 0, descriptor = -1;
@@ -15,17 +17,17 @@ void readAndPassItOn (configuration *conf, int writeDescriptors []) {
 
 	if (conf->inputFileFlag) {
 		//Open file
-		puts("Leo del archivo");
+		if (debug) puts("Leo del archivo");
 		if ( (descriptor=open(conf->inputFile,O_RDONLY)) == -1){
 			perror("open");
 			exit(EXIT_FAILURE);
 		}
 	} else {
-		puts("Leo de STDIN");
+		if (debug) puts("Leo de STDIN");
 		descriptor = STDIN_FILENO;
 	}
 
-	printf("Leo desde %d\n",descriptor);
+	printf("Padre lee desde descriptor: %d\n",descriptor);
 	while ( (nread=read(descriptor,buffer,READING_AMOUNT)) > 0) {
 		if (write(writeDescriptors[0],buffer,nread) == -1) {
 			perror("write into first fd");
@@ -35,5 +37,4 @@ void readAndPassItOn (configuration *conf, int writeDescriptors []) {
 		}
 	}
 	return;
-
 }

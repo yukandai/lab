@@ -17,7 +17,7 @@
     void Pipe(int pipefd[2]);
     
 	// Fork and process input
-	void doWork(configuration *conf, int pipe1fd[2], int pipe2fd[2]);
+	void doWork(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2]);
 
 	// Read input and write into pipes
     void readAndPassItOn(configuration *conf, int writeDesc[2]);
@@ -29,7 +29,7 @@
     int countWords(char *buffer);
 
 	// Capitalize	
-	void capitalize(configuration *conf, int readEnd, int writeEnd);
+	void capitalizeAndSaveToFile(configuration *conf, int readEnd);
 
     // Dad: show results
     void showResults(int pipe3r, configuration *conf);
