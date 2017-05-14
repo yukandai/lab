@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -63,7 +64,7 @@ void doWork(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2])
 
 	//Wait for first child to finish
 	char amount[1024];
-	while( read(pipe3fd[READ_END],amount,sizeof(amount)) > 0) {
+	while( read(pipe3fd[READ_END],amount,strlen(amount)) > 0) {
 		printf("El padre dice que la cantidad de palabras es: %s\n",amount);
 	}
 	//Wait for second child to finish ???
