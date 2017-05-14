@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#define debug 1
+#define debug 0
 
 void capitalizeAndSaveToFile(configuration *conf, int readEnd) {
 
@@ -15,25 +15,25 @@ void capitalizeAndSaveToFile(configuration *conf, int readEnd) {
 	char buf[READING_AMOUNT];
 
 	// Open
-	if ( (outputFd=open(conf->outputFile,O_CREAT,S_IRWXU|S_IRWXG)) < 0) {
+	if ( (outputFd=open(conf->outputFile,O_CREAT|O_APPEND|O_WRONLY,S_IRWXU|S_IRWXG)) < 0) {
 		perror("open");
 		_exit(-1);
 	}
-	if (debug) printf("%s\tSuccessfully opened: %s\n",__FILE__,conf->outputFile);
+	if (debug) printf("%s\tSuccessfully opened: %s descriptor %d\n",__FILE__,conf->outputFile,outputFd);
 	
-	if (debug) printf("%s reading from desc: %d\n",__FILE__,readEnd);
-	while( (nread=read(readEnd,buf,READING_AMOUNT) > 0) ) {
-
+	if (debug) printf("%s\tStart reading process from desc: %d\n",__FILE__,readEnd);
+	while( (nread=read(readEnd,buf,READING_AMOUNT)) > 0 ) {
 		if (nread == -1) {
 			perror("read");
 			_exit(-1);
 		}
-
+		if (debug) printf("%s\treading %s chars lenght %d\n",__FILE__,buf,nread);
+		
 		write(outputFd,buf,nread);
-		if (debug) printf("%s\twrite to fd %d string: %s\n",__FILE__,readEnd,buf);
+		if (debug) printf("%s\twrite to fd %d string: %s length: %d\n",__FILE__,outputFd,buf,nread);
 	}
 
-	puts("Cerrando el archivo abierto");
+	if (debug) printf("%s\tEnd reading process from desc: %d\n",__FILE__,readEnd);
 	close(outputFd);
 
 	return;

@@ -18,13 +18,13 @@ int countWords(char *buffer) {
 		return 0;
 	}
 	count++;
-	if (debug) printf("\nToken[%d]: %s",count,token);
+	if (debug) printf("%s\tToken[%d]: %s\n",__FILE__,count,token);
 
 	while ( (token=strtok_r(NULL,delimiter,&ptr)) != NULL ) {
 		count++;
-		if (debug) printf("\nToken[%d]: %s",count,token);
+		if (debug) printf("%s\tToken[%d]: %s\n",__FILE__,count,token);
 	}
 
-	if (debug) printf("\nTokens totales en la pasada: %d",count);
+	if (debug) printf("%s\tTokens totales en la pasada: %d\n",__FILE__,count);
 	return count;
 }

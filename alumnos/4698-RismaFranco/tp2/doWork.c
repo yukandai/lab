@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define debug 1
+#define debug 0
 
 void doWork(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2]){
     
@@ -39,7 +39,7 @@ void doWork(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2])
 					close(pipe3fd[READ_END]);
 					close(pipe3fd[WRITE_END]);
 					
-					capitalizeAndSaveToFile(conf,pipe1fd[READ_END]);      
+					capitalizeAndSaveToFile(conf,pipe2fd[READ_END]);      
        
 					close(pipe2fd[READ_END]);
 				}
