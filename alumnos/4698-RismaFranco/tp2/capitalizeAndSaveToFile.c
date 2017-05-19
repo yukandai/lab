@@ -2,9 +2,11 @@
 #include "macros.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <ctype.h>
 #include <unistd.h>
 
 #define debug 0
@@ -28,9 +30,16 @@ void capitalizeAndSaveToFile(configuration *conf, int readEnd) {
 			_exit(-1);
 		}
 		if (debug) printf("%s\treading %s chars lenght %d\n",__FILE__,buf,nread);
-		
+	
+		int i;
+		for (i=0;i<strlen(buf);i++) {
+			buf[i] = toupper(buf[i]);
+			i++;
+		}
+
 		write(outputFd,buf,nread);
 		if (debug) printf("%s\twrite to fd %d string: %s length: %d\n",__FILE__,outputFd,buf,nread);
+		memset(buf,'\0',READING_AMOUNT);
 	}
 
 	if (debug) printf("%s\tEnd reading process from desc: %d\n",__FILE__,readEnd);
