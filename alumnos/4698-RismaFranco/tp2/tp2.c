@@ -12,42 +12,23 @@ int main(int argc, char **argv) {
 
   	configuration *conf = (configuration *)malloc(sizeof(configuration));
   	
-	// Child pipes
-	int pipe1fd[2];
-  	int pipe2fd[2];
-  	int pipe3fd[2];
+	int pipe1fd[2], pipe2fd[2], pipe3fd[2];
 
-    // Handle options
   	optionsHandler(argc,argv,conf);
 	if (debug) printf("Opciones: inputFile: %s\t outputFile: %s\n",conf->inputFile, conf->outputFile);
 
-    // Create 1st pipe
     Pipe(pipe1fd);
 	if (debug) puts("Pipe 1 creted");
 
-    // Create 2nd pipe
     Pipe(pipe2fd);
 	if (debug) puts("Pipe 2 created");
 	
-	// Create 2nd pipe
     Pipe(pipe3fd);
-	if (debug) puts("Pipe 2 created");
+	if (debug) puts("Pipe 3 created");
 
     // Fork
-    doWork(conf, pipe1fd, pipe2fd, pipe3fd);
+    flowController(conf, pipe1fd, pipe2fd, pipe3fd);
 
-	/*
-    //Father
-    dadWork(conf, pipe1fd, pipe2fd);
-
-
-
-    do {
-        memset(buffer, 0, sizeof buffer);
-        nread = read(STDIN_FILENO, buffer, sizeof buffer);
-        write(STDOUT_FILENO, buffer, nread);
-    } while (nread > 0);
-*/
-    return 0;
+	return 0;
 }
 

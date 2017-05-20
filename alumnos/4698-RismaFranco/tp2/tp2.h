@@ -17,8 +17,14 @@
     void Pipe(int pipefd[2]);
     
 	// Fork and process input
-	void doWork(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2]);
+	void flowController(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2]);
+	
+	// Dad handler
+	void dadController(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2]);
 
+	// Child handler
+	void childController(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe3fd[2], int child);
+	
 	// Read input and write into pipes
     void readAndPassItOn(configuration *conf, int writeDesc[2]);
 
