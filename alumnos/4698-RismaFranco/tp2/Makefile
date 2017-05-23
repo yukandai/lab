@@ -12,7 +12,6 @@ tp2: *.c
 
 test: tp2
 	cat noticia | ./tp2 -o "salida.txt"
-	sleep 2
 
 strace: tp2
 	cat noticia | strace -f ./tp2 -o "salida.txt"
