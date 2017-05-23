@@ -14,8 +14,6 @@ void dadController(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe
 	
 	int writeDescriptors[2], nread = 0;
 	char amount[16];
-	//char *amount = malloc(16);
-//	memset(amount,'\0',sizeof(amount));
 
 	char * const preString = "Number of chars in file:";
 	char *message = malloc(100);
@@ -34,8 +32,8 @@ void dadController(configuration *conf, int pipe1fd[2], int pipe2fd[2], int pipe
 	close(pipe1fd[WRITE_END]);
 	close(pipe2fd[WRITE_END]);
 
-	while( (nread=read(pipe3fd[READ_END],amount,strnlen(amount,16))) > 0) {
-		if (snprintf(message,strnlen(preString,100)+strnlen(amount,16)+2,"%s%s\n",preString,amount) < 0) {
+	while( (nread=read(pipe3fd[READ_END],amount,sizeof(amount))) > 0) {
+		if (snprintf(message,strnlen(preString,100)+nread+2,"%s%s\n",preString,amount) < 0) {
 			perror("snprintf");
 		}
 		write(STDOUT_FILENO,message,strnlen(message,100));
