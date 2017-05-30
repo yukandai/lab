@@ -8,13 +8,21 @@ Fecha de entrega: 23/05/17
 
 ## Requerimientos:
 
-Crear una aplicación que procese un archivo por entrada estándar. La aplicación deberá 
-lanzar dos procesos. El primero deberá contar la cantidad de palabras mientras que el 
-segundo convertirá una serie de palabras específicas a mayúsculas. 
+Crear una aplicación que procese un archivo por entrada estándar.
 
-El padre será quien muestre la cantidad de palabras por pantalla, mientras que la salida
-del segundo proceso deberá redireccionarse a un archivo nuevo.
+La aplicación deberá lanzar dos procesos.
+
+El primero deberá contar la cantidad de palabras.
+
+El segundo convertirá una serie de palabras específicas a mayúsculas. 
+
+El padre será quien muestre la cantidad de palabras por pantalla.
+
+La salida del segundo proceso deberá redireccionarse a un archivo nuevo.
  
+El segundo hijo también le escribe por un pipe al padre,
+indicándole la cantidad de caracteres que escribió en el nuevo archivo de salida.
+
 
 ## Modo de uso
 
