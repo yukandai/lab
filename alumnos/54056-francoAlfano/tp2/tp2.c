@@ -38,7 +38,6 @@ int main(int argc, char **argv)
     	close(c[1]);
     	close(d[1]);
     	close(c[0]);
-    	close(d[0]);
 		memset(buffer, 0, sizeof buffer);
 		do {
 			nread = read(a[0], buffer, sizeof buffer);
@@ -118,9 +117,9 @@ int main(int argc, char **argv)
 
 			write(file,buffer2,nread);
 
+			} while (nread > 0);
 			sprintf(buffer3,"caracteres: %d", nread);
 	    	write(d[1],buffer3,80000);
-			} while (nread > 0);
 
 			close(d[1]);
 
