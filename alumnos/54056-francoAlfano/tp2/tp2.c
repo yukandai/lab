@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     char buffer[80000];
     char buffer2[80000];
     char buffer_sprin[8000];
-    char buffer3[8000];
+    char buffer3[1];
     char * pch;
 	
 
@@ -23,6 +23,8 @@ int main(int argc, char **argv)
     int palabras = 0;
     int nread;
     int file;
+    int bytes;
+    int fd;
 
     pipe(a);
     pipe(b);
@@ -115,12 +117,32 @@ int main(int argc, char **argv)
 
 				}
 
-			write(file,buffer2,nread);
+				write(file,buffer2,nread);
+
 
 			} while (nread > 0);
-			sprintf(buffer3,"caracteres: %d", nread);
-	    	write(d[1],buffer3,80000);
 
+			close(file);
+
+			fd = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, 0664);
+
+			memset(buffer3, 0, sizeof buffer3);
+
+			while ((bytes = read(fd, buffer3, sizeof buffer3))>0){
+
+				printf("arr: %d\n", bytes);
+
+				bytes++;
+
+			}
+
+			printf("aas:%d\n", bytes);
+
+
+			sprintf(buffer3,"caracteres: %d", bytes);
+	    	write(d[1],buffer3,80000);
+						
+	    	close(c[0]);
 			close(d[1]);
 
 		}
