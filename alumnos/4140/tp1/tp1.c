@@ -8,7 +8,7 @@
  *
  * Modo de uso: $ cat noticia1 | ./tp1
  *
- * Federico Hernandez <federico.hernandez@um.edu.ar>
+ * 
  */
 
 #include <unistd.h>
