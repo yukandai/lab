@@ -36,49 +36,52 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (pipe(fdh1) < 0)
+    /*if (pipe(fdh1) < 0)
     {
         perror("pipe(fdh1)\n");
         return -1;
-    }
+    }*/
 
-    switch (fork())
-    {
-        case 0:
+    //switch (fork())
+    //{
+    //    case 0:*/
             /* HIJO 1 */
-            armar_palabra(fdh1);
-            return 0;
-        case -1:
+    //       armar_palabra(fdh1);
+    //        return 0;
+    //    case -1:
             /* ERROR */
-            perror("fork_1()");
-            return -1;
-        default:
+    //        perror("fork_1()");
+    //        return -1;
+    //    default:
             /* PADRE */
 
-            /*if (pipe(fdh2) < 0)
+            if (pipe(fdh2) < 0)
             {
                 perror("pipe(fdh2)\n");
                 return -1;
-            }*/
+            }
 
-            //switch (fork()) {
-            //case 0:
+            switch (fork()) {
+            case 0:
                 /* HIJO 2 */
-                //reemplazar_palabras(fdh2, word);
-            //    return 0;
-            //case -1:
+                reemplazar_palabra(fdh2, word);
+                return 0;
+            case -1:
                 /* ERROR */
-            //    perror("fork_2()");
-            //    return -1;
-            //default:
+                perror("fork_2()");
+                return -1;
+            default:
                 /* PADRE */
 
                 /* Leemos desde pantalla */
                 if(file_name == NULL)
                 {
-                    while ((nreads = read(STDIN_FILENO, buff, sizeof buff)) > 0) {
-                        close(fdh1[0]);
-                        write(fdh1[1], buff, nreads);
+                    while ((nreads = read(STDIN_FILENO, buff, sizeof buff)) > 0)
+                    {
+                        //close(fdh1[0]);
+                        close(fdh2[0]);
+                        //write(fdh1[1], buff, nreads);
+                        write(fdh2[1], buff, nreads);
                     }
                 }
                 else
@@ -87,14 +90,14 @@ int main(int argc, char *argv[])
                     if (fdfile = open(file_name, O_RDONLY))
                     {
                         /* Cierro las tuberias para lectura  */
-                        close(fdh1[0]);
-                        //close(fdh2[0]);
+                        //close(fdh1[0]);
+                        close(fdh2[0]);
 
                         while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
                         {
                             /* Escribo en las tuberias de cada hijo */
-                            write(fdh1[1], buff, nreads);
-                            //write(fdh2[1], buff, nreads);
+                            //write(fdh1[1], buff, nreads);
+                            write(fdh2[1], buff, nreads);
                         }
                     }
                     else
@@ -102,8 +105,8 @@ int main(int argc, char *argv[])
                         perror("open_file()");
                     }
                 }
-            //}
-    }
+            }
+    //}
 
     return 0;
 }

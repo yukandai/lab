@@ -80,22 +80,6 @@ void armar_palabra(int *fdh)
     free(palabra);
 }
 
-/*void reemplazar_palabras(int *fdh, char *palabra)
-{
-    int nread;
-    char *line;
-    char buffer[100];
-
-    close(fdh[1]);
-
-    while ((nread = read(fdh[0], buffer, sizeof buffer)) > 0)
-    {
-        write(STDOUT_FILENO, buffer, nread);
-        //line = check_line(buffer, nread, palabra);
-        //write(STDOUT_FILENO, line, sizeof line);
-    }
-}*/
-
 /** Devuelve la palabra en mayusculas si es una de las palabras a ser convertida */
 /*char *to_uppercase(char *word, char *palabra)
 {
@@ -129,35 +113,104 @@ void armar_palabra(int *fdh)
         return word;
 }*/
 
-/** Analiza un buffer, formando palabras para luego mandarlas a ser analizadas segun una funcion */
-/*char *check_line(char *line, int length, char *palabra)
+char *revisar_palabra(char *pal, char *reservada)
 {
     int i;
+	int flag = 0;
+	char *uppercase = (char *) malloc(128 * sizeof(char));
+
+	if (strlen(reservada) == strlen(pal))
+	{
+	    if (strncmp(pal, reservada, strlen(pal)) == 0)
+		{
+	        flag = 1;
+	    }
+	}
+
+    if (flag == 1)
+	{
+		for (i=0; i<=strlen(pal); i++)
+		{
+			uppercase[i] = toupper(pal[i]);
+		}
+		return uppercase;
+    }
+	else
+	{
+        return pal;
+    }
+}
+
+int openFile(char *file_name)
+{
+    return open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+}
+
+/** Analiza un buffer, formando palabras para luego mandarlas a ser analizadas segun una funcion */
+char *revisar_linea(char *line, int length, char *pal_reservada)
+{
+    int i, fd;
 
     char *temp = (char *) malloc(128 * sizeof(char));
-    char *word = (char *) malloc(128 * sizeof(char));
-    char *checked_line = (char *) malloc(128 * sizeof(char));
+    char *palabra = (char *) malloc(128 * sizeof(char));
+	char *palabraChequeada = (char *) malloc(128 * sizeof(char));
 
-    for (i=0; i<length; i++)
+	/* FORMA LA PALABRA */
+	for (i=0; i<length; i++)
     {
-        // 10=nueva linea / 32=espacio / 44=, / 46=.
+        /* 10=nueva linea / 32=espacio / 44=, / 46=. */
         if (line[i] != 10 && line[i] != 32 && line[i] != 44 && line[i] != 46)
         {
             *(temp) = line[i];
-            strcat(word, temp);
+            strcat(palabra, temp);
         }
         else
         {
             if (temp > 0)
             {
-                strcat(checked_line, to_uppercase(word, palabra));
-                //*(word) = NULL;
-            } //else {
-                *(temp) = line[i];
-                strcat(checked_line, temp);
-            //}
+                /* Ya tenermos la palabra armada. Contamos los caracteres y armamos el registro */
+				palabraChequeada = revisar_palabra(palabra, pal_reservada);
+				//printf("palabra chequeada: %s\n", palabraChequeada);
+				//palabraChequeada[strlen(palabraChequeada)] = line[i];
+
+				if (fd = openFile("resultado.txt"))
+				{
+                	write(fd, palabraChequeada, strlen(palabraChequeada));
+					//write(fd, temp, strlen(temp));
+                }
+				else
+				{
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+
+                /* warning: assignment makes integer from pointer without a cast [-Wint-conversion] */
+                *(palabra) = NULL;
+            }
+
+            *(temp) = line[i];
         }
     }
 
-    return checked_line;
-}*/
+	//free(temp);
+    //free(word);
+	//free(palabraChequeada);
+  
+	return temp;
+}
+
+void reemplazar_palabra(int *fdh, char *palabra)
+{
+    int nread;
+    char *line;
+    char buffer[100];
+
+    close(fdh[1]);
+
+    while ((nread = read(fdh[0], buffer, sizeof buffer)) > 0)
+    {
+        //write(STDOUT_FILENO, buffer, nread);
+        line = revisar_linea(buffer, nread, palabra);
+        //write(STDOUT_FILENO, line, sizeof line);
+    }
+}
