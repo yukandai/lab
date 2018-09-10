@@ -2,17 +2,10 @@
 /**                         PROTOTIPOS                          **/
 /*****************************************************************/
 
-void agregar_al_registro(char *pal, int *reg);
-
-void armar_palabra(int *fdh);
-
-
-//char *to_uppercase(char *word, char *palabra);
+void contar_palabras(int *fdh);
 
 char *revisar_palabra(char *pal, char *reservada);
 
-int openFile(char *file_name);
+int abrir_archivo(char *file_name);
 
-char *revisar_linea(char *line, int length, char *pal_reservada);
-
-void reemplazar_palabra(int *fdh, char *palabra);
+void reemplazar_palabra(int *fdh, char *palabra_a_remplazar);
