@@ -3,10 +3,13 @@
 /******************************************************************/
 
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
 #include <unistd.h>
+#include <string.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
+#include <stdlib.h>
 
 #include "funciones.h"
 
@@ -22,8 +25,6 @@ int main(int argc, char *argv[])
 
     char buff[100];
     char *file_name = NULL;
-
-	char *temp;
 
     while ((opt = getopt(argc, argv, "i:")) != -1)
     {
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
     if (pipe(fdh1) < 0)
     {
         perror("pipe(fdh1)\n");
-        return -1;
+        exit(EXIT_FAILURE);
     }
 
     switch (fork())
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
         case -1:
             /* ERROR */
             perror("fork_1()");
-            return -1;
+            exit(EXIT_FAILURE);
         default:
             /* PADRE */
 
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
             }
 
             switch (fork())
-			{
+            {
             case 0:
                 /* HIJO 2 */
                 reemplazar_palabra(fdh2, word);
@@ -72,13 +73,13 @@ int main(int argc, char *argv[])
             case -1:
                 /* ERROR */
                 perror("fork_2()");
-                return -1;
+                exit(EXIT_FAILURE);
             default:
                 /* PADRE */
 
-                /* Leemos desde pantalla */
-                if(file_name == NULL)
+                if (file_name == NULL)
                 {
+                    /* Leemos desde pantalla */
                     while ((nreads = read(STDIN_FILENO, buff, sizeof buff)) > 0)
                     {
                         close(fdh1[0]);
@@ -106,10 +107,13 @@ int main(int argc, char *argv[])
                     else
                     {
                         perror("open_file()");
+                        exit(EXIT_FAILURE);
                     }
-                } 
+                }
             }
     }
+
+    free(file_name);
 
     return 0;
 }
