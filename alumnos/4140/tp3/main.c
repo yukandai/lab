@@ -2,31 +2,32 @@
 /**                            TP 3                              **/
 /******************************************************************/
 
-#include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/mman.h>
+#include <semaphore.h>
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
-#include <stdlib.h>
 #include <fcntl.h>
-
+#include <wait.h>
 #include "funciones.h"
 
 int main(int argc, char *argv[])
 {
-    //char *word = "argentina";
+    char *palabras = "sherlock";
 
-    int opt;
-    //int nreads;
-    int fdfile;
-    //int fdh1[2];
-    //int fdh2[2];
-    int fdmem;
+    int   opt;
+    int   nreads;
+    int   fdfile;
 
-    char buff[100];
-    char *file_name = NULL;
+    char  buff[100];
+    char  *file_name = NULL;
+
+	char  *addr;
+    sem_t *semaforo;
 
     while ((opt = getopt(argc, argv, "i:")) != -1)
     {
@@ -41,26 +42,22 @@ int main(int argc, char *argv[])
         }
     }
 
-    /*if (pipe(fdh1) < 0)
-    {
-        perror("pipe(fdh1)\n");
-        exit(EXIT_FAILURE);
-    }*/
-
-	/* Open physical memory */
-	fdmem = shm_open("Physical", O_RDWR, 0777);
-
-	if (fdmem < 0)
+	if ( (addr = mmap(NULL, sizeof (char), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0)) < 0 )
 	{
-		perror("shm_open()\n");
-        exit(EXIT_FAILURE);
+		perror("mmap()");
+		exit(EXIT_FAILURE);
 	}
+
+	semaforo = (sem_t*) addr;
+	sem_init(semaforo, 1, 1);
 
     switch (fork())
     {
         case 0:
             /* HIJO 1 */
-            contar_palabras(fdh1);
+			sem_wait(semaforo);
+            contar_palabras(addr);
+			sem_post(semaforo);
             return 0;
         case -1:
             /* ERROR */
@@ -69,17 +66,13 @@ int main(int argc, char *argv[])
         default:
             /* PADRE */
 
-            if (pipe(fdh2) < 0)
-            {
-                perror("pipe(fdh2)\n");
-                return -1;
-            }
-
             switch (fork())
             {
             case 0:
                 /* HIJO 2 */
-                reemplazar_palabra(fdh2, word);
+				sem_wait(semaforo);
+                reemplazar_palabra(addr, palabras);
+				sem_post(semaforo);
                 return 0;
             case -1:
                 /* ERROR */
@@ -93,10 +86,9 @@ int main(int argc, char *argv[])
                     /* Leemos desde pantalla */
                     while ((nreads = read(STDIN_FILENO, buff, sizeof buff)) > 0)
                     {
-                        close(fdh1[0]);
-                        close(fdh2[0]);
-                        write(fdh1[1], buff, nreads);
-                        write(fdh2[1], buff, nreads);
+						sem_wait(semaforo);
+                        write(addr, buff, nreads);
+						sem_post(semaforo);
                     }
                 }
                 else
@@ -104,15 +96,11 @@ int main(int argc, char *argv[])
                     /* Leemos desde un archivo */
                     if (fdfile = open(file_name, O_RDONLY))
                     {
-                        /* Cierro las tuberias para lectura  */
-                        close(fdh1[0]);
-                        close(fdh2[0]);
-
                         while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
                         {
-                            /* Escribo en las tuberias de cada hijo */
-                            write(fdh1[1], buff, nreads);
-                            write(fdh2[1], buff, nreads);
+							sem_wait(semaforo);
+		                    write(addr, buff, nreads);
+							sem_post(semaforo);
                         }
                     }
                     else
@@ -124,7 +112,14 @@ int main(int argc, char *argv[])
             }
     }
 
+	if ( munmap(addr, sizeof (char)) < 0 )
+    {
+        perror("munmap()");
+        exit(EXIT_FAILURE);
+    }
+	
     free(file_name);
+	wait(NULL);
 
     return 0;
 }

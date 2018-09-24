@@ -8,10 +8,12 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
+#include <semaphore.h>
 #include <fcntl.h>
 #include <stdlib.h>
 
-void contar_palabras(int *fdh)
+void contar_palabras(char *fdh)
 {
     int  nread, i, cant=0;
     char buffer[100];
@@ -20,9 +22,7 @@ void contar_palabras(int *fdh)
     char *palabra   = (char *) malloc(128 * sizeof(char));
     int  *resultado = (int *) malloc(128 * sizeof(int));
 
-    close(fdh[1]);
-
-    while ((nread = read(fdh[0], buffer, sizeof buffer)) > 0)
+    while ((nread = read(fdh, buffer, sizeof buffer)) > 0)
     {
         for (i=0; i<nread; i++)
         {
@@ -87,7 +87,7 @@ int abrir_archivo(char *file_name)
     return open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 }
 
-void reemplazar_palabra(int *fdh, char *palabra_a_remplazar)
+void reemplazar_palabra(char *fdh, char *palabra_a_remplazar)
 {
     int  i;
     int  fd_file;
@@ -98,15 +98,13 @@ void reemplazar_palabra(int *fdh, char *palabra_a_remplazar)
     char *palabra_formada = (char *) malloc(128 * sizeof(char));
     char *linea_revisada  = (char *) malloc(128 * sizeof(char));
 
-    close(fdh[1]);
-
     if ( (fd_file = abrir_archivo("resultado")) < 0 )
     {
         perror("open");
         exit(EXIT_FAILURE);
     }
 
-    while ((nread = read(fdh[0], buffer, sizeof buffer)) > 0)
+    while ((nread = read(fdh, buffer, sizeof buffer)) > 0)
     {
         for (i=0; i<nread; i++)
         {
