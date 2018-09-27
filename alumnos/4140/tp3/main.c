@@ -10,6 +10,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <wait.h>
@@ -17,7 +19,7 @@
 
 int main(int argc, char *argv[])
 {
-    char *palabras = "sherlock";
+    char *palabras = "sherlock"; //char *palabras[] = {"sherlock","holmes"};
 
     int   opt;
     int   nreads;
@@ -26,8 +28,11 @@ int main(int argc, char *argv[])
     char  buff[100];
     char  *file_name = NULL;
 
-	char  *addr;
-    sem_t *semaforo;
+    int   memo;
+    char  *addr;
+
+    //int   s_init;
+    //sem_t *semaforo;
 
     while ((opt = getopt(argc, argv, "i:")) != -1)
     {
@@ -42,84 +47,113 @@ int main(int argc, char *argv[])
         }
     }
 
-	if ( (addr = mmap(NULL, sizeof (char), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0)) < 0 )
-	{
-		perror("mmap()");
-		exit(EXIT_FAILURE);
-	}
+    /* Creamos el espacio de memoria compartida */
+    if ( (memo = shmget(IPC_PRIVATE, 4096, IPC_CREAT | 0600)) < 0 )
+    {
+        perror("shmget()");
+        exit(EXIT_FAILURE);
+    }
 
-	semaforo = (sem_t*) addr;
-	sem_init(semaforo, 1, 1);
+    /*if ( (s_init = sem_init(semaforo, 1, 0)) < 0 )
+    {
+        perror("sem_init()");
+        exit(EXIT_FAILURE);
+    }*/
+    //semaforo = (sem_t*) addr;
 
     switch (fork())
     {
+    case 0:
+        /* HIJO 1 */
+
+        /* Vinculamos la memoria comportida */
+        if ( (addr = shmat(memo, 0, SHM_RDONLY)) < 0 )
+        {
+            perror("shmat()");
+            exit(EXIT_FAILURE);
+        }
+
+        //sem_wait(semaforo);
+        contar_palabras(addr);
+        //sem_post(semaforo);
+
+        if ( (shmdt(addr)) < 0 )
+        {
+            perror("shmdt()");
+            exit(EXIT_FAILURE);
+        }
+
+        return 0;
+    case -1:
+        /* ERROR */
+        perror("fork_1()");
+        exit(EXIT_FAILURE);
+    default:
+        /* PADRE */
+
+        switch (fork())
+        {
         case 0:
-            /* HIJO 1 */
-			sem_wait(semaforo);
-            contar_palabras(addr);
-			sem_post(semaforo);
+            /* HIJO 2 */
+
+            /* Vinculamos la memoria comportida */
+            if ( (addr = shmat(memo, 0, SHM_RDONLY)) < 0 )
+            {
+                perror("shmat()");
+                exit(EXIT_FAILURE);
+            }
+
+            //sem_wait(semaforo);
+            reemplazar_palabra(addr, palabras);
+            //sem_post(semaforo);
+
+            if ( (shmdt(addr)) < 0 )
+            {
+                perror("shmdt()");
+                exit(EXIT_FAILURE);
+            }
+
             return 0;
         case -1:
             /* ERROR */
-            perror("fork_1()");
+            perror("fork_2()");
             exit(EXIT_FAILURE);
         default:
             /* PADRE */
 
-            switch (fork())
+            if (file_name == NULL)
             {
-            case 0:
-                /* HIJO 2 */
-				sem_wait(semaforo);
-                reemplazar_palabra(addr, palabras);
-				sem_post(semaforo);
-                return 0;
-            case -1:
-                /* ERROR */
-                perror("fork_2()");
-                exit(EXIT_FAILURE);
-            default:
-                /* PADRE */
-
-                if (file_name == NULL)
+                /* Leemos desde pantalla */
+                while ((nreads = read(STDIN_FILENO, buff, sizeof buff)) > 0)
                 {
-                    /* Leemos desde pantalla */
-                    while ((nreads = read(STDIN_FILENO, buff, sizeof buff)) > 0)
+                    //sem_wait(semaforo);
+                    write(memo, buff, nreads);
+                    //sem_post(semaforo);
+                }
+            }
+            else
+            {
+                /* Leemos desde un archivo */
+                if (fdfile = open(file_name, O_RDONLY))
+                {
+                    while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
                     {
-						sem_wait(semaforo);
-                        write(addr, buff, nreads);
-						sem_post(semaforo);
+                        //sem_wait(semaforo);
+                        write(memo, buff, nreads);
+                        //sem_post(semaforo);
                     }
                 }
                 else
                 {
-                    /* Leemos desde un archivo */
-                    if (fdfile = open(file_name, O_RDONLY))
-                    {
-                        while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
-                        {
-							sem_wait(semaforo);
-		                    write(addr, buff, nreads);
-							sem_post(semaforo);
-                        }
-                    }
-                    else
-                    {
-                        perror("open_file()");
-                        exit(EXIT_FAILURE);
-                    }
+                    perror("open_file()");
+                    exit(EXIT_FAILURE);
                 }
             }
+        }
     }
 
-	if ( munmap(addr, sizeof (char)) < 0 )
-    {
-        perror("munmap()");
-        exit(EXIT_FAILURE);
-    }
-	
     free(file_name);
-	wait(NULL);
+    wait(NULL);
 
     return 0;
 }
