@@ -16,9 +16,14 @@ void contar_palabras(int *fdh)
     int  nread, i, cant=0;
     char buffer[100];
 
-    char *temp      = (char *) malloc(128 * sizeof(char));
-    char *palabra   = (char *) malloc(128 * sizeof(char));
-    int  *resultado = (int *) malloc(128 * sizeof(int));
+    char *temp    = (char *) malloc(128 * sizeof(char));
+    char *palabra = (char *) malloc(128 * sizeof(char));
+
+    // TEMP
+    int palabras_formadas=0;
+    int *cant_letras   = (int *) malloc(128 * sizeof(int));
+    int *cant_palabras = (int *) malloc(128 * sizeof(int));
+    int j;
 
     close(fdh[1]);
 
@@ -26,38 +31,68 @@ void contar_palabras(int *fdh)
     {
         for (i=0; i<nread; i++)
         {
-            /* 10=nueva linea - 32=espacio - 44=, - 46=. - 174=« */
-            if (buffer[i] == 10 || buffer[i] == 32 || buffer[i] == 44 || buffer[i] == 46 || buffer[i] == 174)
+            /* Si el caracter es uno de estos ( 10=nueva linea - 32=espacio - 44=, - 46=. - 174=« - 175=» ) NO formamos la palabra */
+            if (buffer[i] == 10 || buffer[i] == 32 || buffer[i] == 44 || buffer[i] == 46 || buffer[i] == 174 || buffer[i] == 175)
             {
+                /* Chequeamos si hay una palabra formada */
                 if (strlen(palabra) > 0)
                 {
-                    /* palabra armada */
+                    palabras_formadas++;
                     cant = strlen(palabra);
-                    resultado[cant]++;
+                    //printf("\n[%d]Palabra: %s , tiene %d letras", palabras_formadas, palabra, cant);
+
+                    /* si no hemos guardado nada aun */
+                    if (sizeof cant_palabras)
+                    {
+                        /* Primer elemento */
+                        cant_letras[palabras_formadas]   = cant;
+                        cant_palabras[palabras_formadas] = 1;
+                    }
+                    else
+                    {
+                        /* Me fijo si esa cantidad de letras ya esta guardada */
+                        for(j=0; j<sizeof cant_letras; j++)
+                        {
+                            if (cant_letras[j] == cant)
+                            {
+                                /* Ya esta esa cantidad de letras, entonces incremento el contador */
+                                cant_palabras[j]++;
+                            }
+                            else
+                            {
+                                /* No hay palabras de ese largo, la ingreso y seteo la cantidad */
+                                cant_letras[j] = cant;
+                                cant_palabras[j]++;
+                            }
+                        }
+                    }
+
                     *(palabra) = NULL;
-                    //printf("\ncantidad de letras: %d", cant);
-                    //printf("\ncantidad de palabras con esas letras: %d", resultado[cant]);
                 }
             }
             else
             {
-                /* armamos la palabra */
+                /* Guardamos el caracter para armar la palabra */
                 *(temp) = buffer[i];
                 strcat(palabra, temp);
             }
         }
     }
 
+    //printf("\n\nPalabras formadas: %d \n", palabras_formadas);
+    //printf("Resultado: %d \n", (int) sizeof(resultado));
+    //printf("TOTAL: %d \n", total);
+
     /* Mostramos el resultado */
-    for (i=0; i<sizeof(resultado); i++)
+    for (i=1; i<sizeof(cant_letras); i++)
     {
-        /** TODO: no muestra (se alamcena?) el total de los resultados */
-        printf("\n [%d] palabras con [%d] letras \n", resultado[i], i);
+        printf("\n [%d] palabras con [%d] letras \n", cant_palabras[i], cant_letras[i]);
     }
 
     free(temp);
     free(palabra);
-    free(resultado);
+
+    EXIT_SUCCESS;
 }
 
 char *revisar_palabra(char *pal, char *reservada)
@@ -110,8 +145,8 @@ void reemplazar_palabra(int *fdh, char *palabra_a_remplazar)
     {
         for (i=0; i<nread; i++)
         {
-            /* 10=nueva linea - 32=espacio - 44=, - 46=. - 174=« */
-            if (buffer[i] == 10 || buffer[i] == 32 || buffer[i] == 44 || buffer[i] == 46 || buffer[i] == 174)
+            /* Si el caracter es uno de estos ( 10=nueva linea - 32=espacio - 44=, - 46=. - 174=« - 175=» ) NO formamos la palabra */
+            if (buffer[i] == 10 || buffer[i] == 32 || buffer[i] == 44 || buffer[i] == 46 || buffer[i] == 174 || buffer[i] == 175)
             {
                 /* NO FORMA LA PALABRA */
                 if (strlen(palabra_formada) > 0)
@@ -142,4 +177,6 @@ void reemplazar_palabra(int *fdh, char *palabra_a_remplazar)
     free(temp);
     free(palabra_formada);
     free(linea_revisada);
+
+    EXIT_SUCCESS;
 }
