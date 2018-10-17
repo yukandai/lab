@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     default:
         /* PADRE */
-
         if (pipe(fdh2) < 0)
         {
             perror("pipe(fdh2)\n");
