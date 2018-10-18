@@ -25,8 +25,8 @@ void contar_palabras(int *fdh)
     int j;
     int incrementada = 0;
     int palabras_formadas = 0;
-    int *cant_letras   = (int *)malloc(1940*sizeof(int));
-    int *cant_palabras = (int *)malloc(1940*sizeof(int));
+    int *cant_letras   = (int *)malloc(128*sizeof(int));
+    int *cant_palabras = (int *)malloc(128*sizeof(int));
 
     close(fdh[1]);
 
