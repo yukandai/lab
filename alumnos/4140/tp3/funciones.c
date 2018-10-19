@@ -8,71 +8,109 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
-#include <semaphore.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <semaphore.h>
 
-void contar_palabras(char *fdh)
+void saludo(char *mensaje)
 {
-    int  nread, i, cant=0;
+	printf("%s", mensaje);
+}
+
+void contar_palabras(int *memo, char *mensaje)
+{
+	saludo(mensaje);
+
+    /*int  i;
+    int  cant = 0;
+    int  nread;
     char buffer[100];
 
-    char *temp      = (char *) malloc(128 * sizeof(char));
-    char *palabra   = (char *) malloc(128 * sizeof(char));
-    int  *resultado = (int *) malloc(128 * sizeof(int));
+    char *temp    = (char *)malloc(128*sizeof(char));
+    char *palabra = (char *)malloc(128*sizeof(char));
 
-    while ((nread = read(fdh, buffer, sizeof buffer)) > 0)
+    int  j;
+    int  incrementada = 0;
+    int  palabras_formadas = 0;
+    int  *cant_letras   = (int *)malloc(128*sizeof(int));
+    int  *cant_palabras = (int *)malloc(128*sizeof(int));
+
+    while ((nread = read(memo, buffer, sizeof buffer)) > 0)
     {
         for (i=0; i<nread; i++)
         {
-            /* 10=nueva linea - 32=espacio - 44=, - 46=. - 174=« */
-            if (buffer[i] == 10 || buffer[i] == 32 || buffer[i] == 44 || buffer[i] == 46 || buffer[i] == 174)
+            // Si el caracter NO es una letra
+            if ( (buffer[i] >= 0 && buffer[i] <= 64) || (buffer[i] >= 91 && buffer[i] <= 96) || (buffer[i] >= 123 && buffer[i] <= 127) || buffer[i] == 174 || buffer[i] == 175 )
             {
+                // Chequeamos si hay una palabra formada
                 if (strlen(palabra) > 0)
                 {
-                    /* palabra armada */
-                    cant = strlen(palabra);
-                    resultado[cant]++;
-                    *(palabra) = NULL;
-                    //printf("\ncantidad de letras: %d", cant);
-                    //printf("\ncantidad de palabras con esas letras: %d", resultado[cant]);
+		    	palabras_formadas++;
+                    	cant = strlen(palabra);
+                   	incrementada = 0;
+
+			// Me fijo si esa cantidad de letras ya esta guardada
+			for(j=1; j<palabras_formadas; j++)
+			{
+				if (cant_letras[j] == cant)
+				{
+					// Ya esta esa cantidad de letras, entonces incremento el contador
+					cant_palabras[j]++;
+					incrementada=1;
+					break;
+				}
+			}
+
+			if (incrementada == 0)
+			{
+				// No hay palabras de ese largo, la ingreso y seteo la cantidad
+				cant_letras[palabras_formadas] = cant;
+				cant_palabras[palabras_formadas]++;
+			}
+
+			// "Blanqueamos" la variable
+			memset(palabra,0,128*sizeof(char));
                 }
             }
             else
             {
-                /* armamos la palabra */
-                *(temp) = buffer[i];
+                // Guardamos el caracter para armar la palabra
+                *temp = buffer[i];
                 strcat(palabra, temp);
             }
         }
     }
 
-    /* Mostramos el resultado */
-    for (i=0; i<sizeof(resultado); i++)
+    // Mostramos el resultado
+    for (i=1; i<palabras_formadas; i++)
     {
-        /** TODO: no muestra (se alamcena?) el total de los resultados */
-        printf("\n [%d] palabras con [%d] letras \n", resultado[i], i);
+        if ( (*(cant_palabras+i) != 0) && (*(cant_letras+i) != 0) )
+        {
+            printf("\n [%d] palabras con [%d] letras \n", *(cant_palabras+i), *(cant_letras+i));
+        }
     }
 
     free(temp);
     free(palabra);
-    free(resultado);
+    free(cant_letras);
+    free(cant_palabras);
+    */
 }
 
-char *revisar_palabra(char *pal, char *reservada)
+/*char *revisar_palabra(char *pal, char *reservadas)
 {
     int  i;
-    char *uppercase = (char *) malloc(128 * sizeof(char));
+    char *uppercase = (char *)malloc(128*sizeof(char));
 
-    if (strlen(reservada) == strlen(pal))
+    if (strlen(reservadas) == strlen(pal))
     {
-        if (strncmp(pal, reservada, strlen(pal)) == 0)
+        if (strncmp(pal, reservadas, strlen(pal)) == 0)
         {
             for (i=0; i<=strlen(pal); i++)
             {
                 uppercase[i] = toupper(pal[i]);
             }
+
             return uppercase;
         }
     }
@@ -80,64 +118,71 @@ char *revisar_palabra(char *pal, char *reservada)
     free(uppercase);
 
     return pal;
-}
+}*/
 
 int abrir_archivo(char *file_name)
 {
     return open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 }
 
-void reemplazar_palabra(char *fdh, char *palabra_a_remplazar)
+void reemplazar_palabra(int *memo, char *reservadas, char *mensaje)
 {
-    int  i;
+	saludo(mensaje);
+
+	/** TODO: mostrar las palabras reservadas */
+	//printf("%zu", sizeof reservadas);
+
+    /*int  i;
     int  fd_file;
     int  nread;
     char buffer[100];
 
-    char *temp            = (char *) malloc(128 * sizeof(char));
-    char *palabra_formada = (char *) malloc(128 * sizeof(char));
-    char *linea_revisada  = (char *) malloc(128 * sizeof(char));
+    char *temp            = (char *)malloc(128 * sizeof(char));
+    char *palabra_formada = (char *)malloc(128 * sizeof(char));
+    char *linea_revisada  = (char *)malloc(128 * sizeof(char));
 
     if ( (fd_file = abrir_archivo("resultado")) < 0 )
     {
         perror("open");
-        exit(EXIT_FAILURE);
+        return -1;
     }
 
-    while ((nread = read(fdh, buffer, sizeof buffer)) > 0)
+    while ((nread = read(memo, buffer, sizeof buffer)) > 0)
     {
         for (i=0; i<nread; i++)
         {
-            /* 10=nueva linea - 32=espacio - 44=, - 46=. - 174=« */
-            if (buffer[i] == 10 || buffer[i] == 32 || buffer[i] == 44 || buffer[i] == 46 || buffer[i] == 174)
+            // Si el caracter NO es una letra
+            if ( (buffer[i] >= 0 && buffer[i] <= 64) || (buffer[i] >= 91 && buffer[i] <= 96) || (buffer[i] >= 123 && buffer[i] <= 127) || buffer[i] == 174 || buffer[i] == 175 )
             {
-                /* NO FORMA LA PALABRA */
+                // NO FORMA LA PALABRA
                 if (strlen(palabra_formada) > 0)
                 {
-                    /** TODO: ingresa caracteres raros, las palabras las forma y analiza bien */
+                    // Palabra armada, la analizo y la concateno a la salida
+                    strcat(linea_revisada, revisar_palabra(palabra_formada, reservadas));
 
-                    /* palabra armada, la analizo y la concateno a la salida */
-                    strcat(linea_revisada, revisar_palabra(palabra_formada, palabra_a_remplazar));
-                    *(palabra_formada) = NULL;
+                    // "Blanqueamos" la variable
+                    memset(palabra_formada,0,128*sizeof(char));
                 }
 
-                /* es un signo, directamente lo concateno a la salida */
-                *(temp) = buffer[i];
+                // es un signo, directamente lo concateno a la salida
+                *temp = buffer[i];
                 strcat(linea_revisada, temp);
             }
             else
             {
-                /* es una letra, armo la palabra */
-                *(temp) = buffer[i];
+                // es una letra, armo la palabra
+                *temp = buffer[i];
                 strcat(palabra_formada, temp);
             }
         }
 
-        write(fd_file, linea_revisada, nread);
-        *(linea_revisada) = NULL;
+        write(fd_file, linea_revisada, strlen(linea_revisada));
+        // "blanqueamos" la variable
+        memset(linea_revisada,0,128*sizeof(char));
     }
 
     free(temp);
     free(palabra_formada);
     free(linea_revisada);
+    */
 }
