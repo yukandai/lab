@@ -18,14 +18,14 @@
 
 int main(int argc, char *argv[])
 {
-    char *words[] = {"Sherlock","Holmes"};
+	char *words[] = {"Sherlock","Holmes"};
 
     int  opt;
-    //int  nreads;
+    int  nreads;
     int  fdfile = STDIN_FILENO;
-    //char buff[100];
+    char buff[100];
+	char *ptr_memo;
 
-    char *ptr_memo;
     sem_t *sem1, *sem2;
 
     while ((opt = getopt(argc, argv, "i:")) > 0)
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     }
 
     /* Creamos el espacio de memoria compartida */
-    if ( (ptr_memo = mmap(NULL, sizeof (char *), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0)) < 0 )
+    if ( (ptr_memo = mmap(NULL, 100, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0)) < 0 )
     {
         perror("mmat()");
         return -1;
@@ -52,16 +52,17 @@ int main(int argc, char *argv[])
 	sem2 = sem1 + sizeof sem2;
 
 	/* Inicializo los semaforos */
-	sem_init(sem1,1,0);
+	sem_init(sem1,1,1);
 	sem_init(sem2,1,0);
 
     switch (fork())
     {
     case 0:
         /* HIJO 1 */
-        contar_palabras(ptr_memo, "Soy el hijo 1\n");
-        sem_post(sem1);
         sem_wait(sem2);
+        //contar_palabras(ptr_memo, "Soy el hijo 1\n");
+        printf("HIJO 1 lee: %s\n", ptr_memo);
+        sem_post(sem2);
         return 0;
     case -1:
         /* ERROR */
@@ -69,29 +70,28 @@ int main(int argc, char *argv[])
         return -1;
     default:
         /* PADRE */
-
         switch (fork())
         {
         case 0:
-            // HIJO 2
-            reemplazar_palabra(ptr_memo, words, "Soy el hijo 2\n");
-			sem_post(sem1);
-			sem_wait(sem2);
+            /* HIJO 2 */
+            //sem_wait(sem2);
+            reemplazar_palabra(ptr_memo, words, sem2);
+            //printf("HIJO 2 lee: %s\n", ptr_memo);
+			//sem_post(sem2);
             return 0;
         case -1:
-            // ERROR
+            /* ERROR */
             perror("fork_2()");
             return -1;
         default:
             /* PADRE */
-
-            //while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
-            //{
+            while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
+            {
 				sem_wait(sem1);
-				saludo("Soy el padre\n");
-				// write(ptr_memo, buff, nreads);
+				memcpy(ptr_memo, buff, nreads);
 				sem_post(sem2);
-            //}
+				sem_post(sem1);
+            }
         }
     }
 

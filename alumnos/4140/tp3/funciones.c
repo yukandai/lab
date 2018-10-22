@@ -17,7 +17,7 @@ void saludo(char *mensaje)
 	printf("%s", mensaje);
 }
 
-void contar_palabras(int *memo, char *mensaje)
+void contar_palabras(char *memo, char *mensaje)
 {
 	saludo(mensaje);
 
@@ -125,12 +125,17 @@ int abrir_archivo(char *file_name)
     return open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 }
 
-void reemplazar_palabra(int *memo, char *reservadas, char *mensaje)
+void reemplazar_palabra(int *memo, char *reservadas, sem_t *sema2)
 {
-	saludo(mensaje);
+	int  nread;
+    char buffer[100];
 
-	/** TODO: mostrar las palabras reservadas */
-	//printf("%zu", sizeof reservadas);
+	while ((nread = memcpy(memo, buffer, nread)) > 0)
+    {
+		sem_wait(sema2);
+		printf("HIJO 2 lee: %s\n", memo);
+		sem_post(sema2);
+	}
 
     /*int  i;
     int  fd_file;
@@ -157,8 +162,11 @@ void reemplazar_palabra(int *memo, char *reservadas, char *mensaje)
                 // NO FORMA LA PALABRA
                 if (strlen(palabra_formada) > 0)
                 {
-                    // Palabra armada, la analizo y la concateno a la salida
-                    strcat(linea_revisada, revisar_palabra(palabra_formada, reservadas));
+					for ()
+					{
+						// Palabra armada, la analizo y la concateno a la salida
+						strcat(linea_revisada, revisar_palabra(palabra_formada, reservadas));
+                    }
 
                     // "Blanqueamos" la variable
                     memset(palabra_formada,0,128*sizeof(char));
