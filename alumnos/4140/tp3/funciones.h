@@ -8,7 +8,7 @@ void contar_palabras(char *memo, char *mensaje);
 
 int abrir_archivo(char *file_name);
 
-void reemplazar_palabra(char *memo, char *reservadas[], sem_t *sema2);
+void reemplazar_palabra(char *memo, char *reservadas[], char *mensaje);
 
 /** TEST */
 void saludo(char *mensaje);

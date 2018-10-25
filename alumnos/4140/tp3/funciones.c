@@ -125,17 +125,9 @@ int abrir_archivo(char *file_name)
     return open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 }
 
-void reemplazar_palabra(int *memo, char *reservadas, sem_t *sema2)
+void reemplazar_palabra(int *memo, char *reservadas, char *mensaje)
 {
-	int  nread;
-    char buffer[100];
-
-	while ((nread = memcpy(memo, buffer, nread)) > 0)
-    {
-		sem_wait(sema2);
-		printf("HIJO 2 lee: %s\n", memo);
-		sem_post(sema2);
-	}
+	saludo(mensaje);
 
     /*int  i;
     int  fd_file;

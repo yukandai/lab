@@ -18,13 +18,13 @@
 
 int main(int argc, char *argv[])
 {
-	char *words[] = {"Sherlock","Holmes"};
+	//char *words[] = {"Sherlock","Holmes"};
 
     int  opt;
-    int  nreads;
+    int  nread;
     int  fdfile = STDIN_FILENO;
-    char buff[100];
-	char *ptr_memo;
+    char buffer[100];
+	char *addr;
 
     sem_t *sem1, *sem2;
 
@@ -42,14 +42,15 @@ int main(int argc, char *argv[])
     }
 
     /* Creamos el espacio de memoria compartida */
-    if ( (ptr_memo = mmap(NULL, 100, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0)) < 0 )
+    if ( (addr = mmap(NULL, 100, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0)) < 0 )
     {
         perror("mmat()");
         return -1;
     }
 
-	sem1 = (sem_t *) ptr_memo + sizeof sem1;
+	sem1 = (sem_t *) addr + sizeof sem1;
 	sem2 = sem1 + sizeof sem2;
+
 
 	/* Inicializo los semaforos */
 	sem_init(sem1,1,1);
@@ -59,10 +60,18 @@ int main(int argc, char *argv[])
     {
     case 0:
         /* HIJO 1 */
-        sem_wait(sem2);
-        //contar_palabras(ptr_memo, "Soy el hijo 1\n");
-        printf("HIJO 1 lee: %s\n", ptr_memo);
-        sem_post(sem2);
+        do
+        {
+			sem_wait(sem2);
+			if (nread > 0)
+			{
+				//contar_palabras(addr, "Soy el hijo 1\n");
+				//printf("\nHIJO 1 leyendo\n");
+				write(STDOUT_FILENO, addr, nread);
+			}
+			sem_post(sem2);
+		}
+		while ((nread = read(addr, buffer, sizeof buffer)) > 0);
         return 0;
     case -1:
         /* ERROR */
@@ -74,10 +83,17 @@ int main(int argc, char *argv[])
         {
         case 0:
             /* HIJO 2 */
-            //sem_wait(sem2);
-            reemplazar_palabra(ptr_memo, words, sem2);
-            //printf("HIJO 2 lee: %s\n", ptr_memo);
-			//sem_post(sem2);
+            do
+			{
+				sem_wait(sem2);
+				if (nread > 0)
+				{
+					//reemplazar_palabra(ptr_memo, words, "Soy el hijo 2\n");
+					write(STDOUT_FILENO, addr, nread);
+				}
+				sem_post(sem2);
+			}
+			while ((nread = read(addr, buffer, sizeof buffer)) > 0);
             return 0;
         case -1:
             /* ERROR */
@@ -85,13 +101,18 @@ int main(int argc, char *argv[])
             return -1;
         default:
             /* PADRE */
-            while ((nreads = read(fdfile, buff, sizeof buff)) > 0)
-            {
+            while ((nread = read(fdfile, buffer, sizeof buffer)) > 0)
+			{
 				sem_wait(sem1);
-				memcpy(ptr_memo, buff, nreads);
+
+				//memcpy(addr, buffer, sizeof buffer);
+				//memset(addr, 0, sizeof buffer);
+				strcpy(addr, buffer);
+				//printf("%s", addr);
+				//write(STDOUT_FILENO, addr, nread);
+
 				sem_post(sem2);
-				sem_post(sem1);
-            }
+			}
         }
     }
 
