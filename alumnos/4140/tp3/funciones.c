@@ -12,14 +12,9 @@
 #include <stdlib.h>
 #include <semaphore.h>
 
-void saludo(char *mensaje)
+void contar_palabras(char *memo)
 {
-	printf("%s", mensaje);
-}
-
-void contar_palabras(char *memo, char *mensaje)
-{
-	saludo(mensaje);
+	printf("%s", memo);
 
     /*int  i;
     int  cant = 0;
@@ -125,9 +120,9 @@ int abrir_archivo(char *file_name)
     return open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 }
 
-void reemplazar_palabra(int *memo, char *reservadas, char *mensaje)
+void reemplazar_palabra(char *memo, char *reservadas)
 {
-	saludo(mensaje);
+	//printf("%s", memo);
 
     /*int  i;
     int  fd_file;
