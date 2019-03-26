@@ -1,2 +1,0 @@
-
-void hijo(int connd);
