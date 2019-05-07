@@ -9,7 +9,7 @@ import getopt
 def argumentos():
     parse=argparse.argumentosparse()
     parser.add_argument("-f","--file",dest="patharchivo",nargs=1,required=True,"Input file path")
-    parser.add_argument("-s","--size",dest="vertamaño",nargs="?",default=2048,const=1024,type=int,help="Reading chunks size")
+    parser.add_argument("-s","--size",dest="vertamano",nargs="?",default=2048,const=1024,type=int,help="Reading chunks size")
     return parse.parse_argumento()
 
 def abirarchivo(path):
@@ -27,12 +27,12 @@ def contador(text):
         text=text.lower()
         return len(text.split())
 
-def leer(fd, tamaño, cola):
+def leer(fd, tamano, cola):
     EOF=False
     while not EOF:
-        text=os.read(fd,tamaño)
+        text=os.read(fd,tamano)
         cola.put(text)
-        if len(text)<tamaño:
+        if len(text)<tamano:
             EOF=True
     os.close(fd)
 
@@ -51,7 +51,7 @@ args=argumentos()
 
 fd=abirarchivo(args.patharchivo)
 
-leer(fd,args.vertamaño,cola)
+leer(fd,args.vertamano,cola)
 
 proceso=multiprocessing.Process(target=procedimiento,args=(cola.resultado))
 proceso2=multiprocessing.Process(target=procedimiento,args=(cola,resultado))
@@ -68,4 +68,4 @@ while(resultado.csize()!=0):
     contadorpalabras=contadorpalabras+int(resultado.get())
 print contadorpalabras
 
-print(args.patharchivo,args.vertamaño)
+print(args.patharchivo,args.vertamano)
