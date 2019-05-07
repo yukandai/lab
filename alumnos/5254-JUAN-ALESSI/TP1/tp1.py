@@ -3,8 +3,6 @@
 
 from multiprocessing import Process, Queue
 import os
-import time
-import multiprocessing
 import sys
 import getopt
 
@@ -15,41 +13,21 @@ def ayuda():
       
     print('./tp1.py -f /etc/services -n 1024 -p 2\n')
  
-def func1(mq,i):
-	
-	fin= True
-	while fin == True:
-	
-			a = len(mq.get().split(" "))
-			#print " estoy en try"
-			print "Soy el proceso %d y acabo de leer la cantidad de palabras: " % (i + 1) , a, os.getpid(),os.getppid()
-			#mq.put(a) esto me estaba dando errores
-			time.sleep(5)
-			if mq.empty() is True:
-				fin=False
+def func1():
+	a = 0
+	while True:
+                        leido = mq.get()	
+			if leido == "listo":
+                            break
+			a = a + len(leido.split(" "))
 
-
-def cuenta(texto):
-	contador=0
-	palabras=0
-
-	resutl=str(texto).split(" ")
-	++contador
-	palabras=contador
-
-	print "cantidad de palabras" + palabras
-
-def salir():
-	print "gracias"
-
-
+        mqr.put(a)                        
 
 try:
-	(opts, args) = getopt.getopt(sys.argv[1:], 'hf:n:p:')
+	(opts, args) = getopt.getopt(sys.argv[1:],'hf:n:p:')
 except getopt.GetoptError as err:
 	print(err)
 	sys.exit(2)
-
 
 
 if len(opts) != 0:
@@ -70,9 +48,9 @@ else:
 	ayuda()
 	sys.exit(2)
 print "soy el padre"
-print  "el nombre del archivo de origen es: " ,archivo_origen
-print "el bloque determinado es: " , bloque
-print "la cantidad de hijos a crear es: " , hijos
+print  "el nombre del archivo de origen es: ",archivo_origen
+print "el bloque determinado es: ",bloque
+print "la cantidad de hijos a crear es: ",hijos
 
 processes = []
 
@@ -81,45 +59,31 @@ total = os.stat(archivo_origen).st_size
 
 EOF = False
 mq = Queue()
+mqr = Queue()
 
 
 for i in range(int(hijos)):
-	p = Process(target=func1, args=(mq,i))
+	p = Process(target=func1, args=())
 	processes.append(p)
 	p.start()
 
 
 while EOF == False:
 	leido = os.read(fdo, int(bloque))
-	print "total leido del archivo: " , len(leido)
+	print "total leido del archivo: ",len(leido)
 	mq.put(leido)
 	if len(leido) != int(bloque):
 		EOF = True
 
-#for process in processes:
-#	processes[i].start()
-#	process.join()
-
-#h1 = multiprocessing.Process(target=func1,  args=())
-#h2 = multiprocessing.Process(target=func2,  args=())
-
-#h1.start()
-#h2.start()
-
-
-
-time.sleep(5)
-
-
-#h2.join()
-#h1.join()
-
 for process in processes:
-		process.join()
+    mq.put("listo")
+for process in processes:
+	process.join()
 
 print "terminaron los hijos"
 
-while mq.empty() is False:
-	print mq.get()
+palabras_totales = 0
+while mqr.empty() is False:
+	palabras_totales = palabras_totales + mqr.get()
 
-	
+print palabras_totales
