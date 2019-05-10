@@ -1,44 +1,26 @@
 #!/usr/bin/env python3
 #encoding=utf8
 
-import multiprocessing
-
 import os
 import sys
 import time
 import getopt
+import multiprocessing
 
 import funciones
 
-#def leer1(queue):
-#    leido = queue.get()
-#    print(leido)
-
-#def leer2():
-#    leido = queue.get()
-#    print(leido)
-
-def leer1(queue):
-    #leido = queue.get()
-    #palabras = leido.split()
-    #print(len(palabras))
+def leer(mq, cant):
     while True:
-        msg = queue.get()
+        msg = mq.get()
         palabras = msg.split()
         if (msg == 'DONE'):
             break
-        print(len(palabras))
-
-def leer2(queue):
-    #leido = queue.get()
-    #palabras = leido.split()
-    #print(len(palabras))
-    while True:
-        msg = queue.get()
-        palabras = msg.split()
-        if (msg == 'DONE'):
-            break
-        print(len(palabras))
+        cant += len(palabras)
+        print('palabras: ' , len(palabras), os.getpid(), cant)
+        #print('H1: TOTAL: %d' % cant)
+        #print('\n************')
+        #cant = cant + len(palabras)
+        #return cant
 
 def main():
     try:
@@ -46,6 +28,7 @@ def main():
 
         archivo = None
         bloque = None
+        nro = None
 
         for o, a in opts:
             if o == "-f":
@@ -55,54 +38,49 @@ def main():
             elif o == "-p":
                 nro = int(a)
             elif o == "-h":
-                print('Ejemplo modo de uso: \n ./tp1.py -f <archivo> -n <tamaño_bloque> \n ./tp1.py -f /etc/services -n 1024')
+                print('Ejemplo modo de uso: \n ./tp1.py -f <archivo> -n <tamaño_bloque> -p <cant hijos> \n ./tp1.py -f /etc/services -n 1024 -p 3')
                 sys.exit(2)
             else:
                 assert False, "option no válida"
 
-        mensajes = []
         start_index = 0
-        end_index = os.stat(archivo).st_size
+        cant = 0
 
         mq = multiprocessing.Queue()
 
         #Lanzamos n hijos
-        #for h in range(0, nro): 
-        #    p = multiprocessing.Process(target=leer, args=((mq),))
-        #    p.start()
-        #    p.join()
-        #    exec('h{} = multiprocessing.Process()'.format(i))
-        #    exec('h{} = start()'.format(i))
+        for h in range(0, nro):
+            h = multiprocessing.Process(target=leer, args=(mq, cant,))
+            h.start()
 
-        #Lanzamos 2 hijos
-        #print('Hijo %d' % (h))
-        mq = multiprocessing.Queue()
+        #h1 = multiprocessing.Process(target=leer, args=(mq, cant,))
+        #h2 = multiprocessing.Process(target=leer, args=(mq, cant,))
 
-        h1 = multiprocessing.Process(target=leer1, args=((mq),))
-        h2 = multiprocessing.Process(target=leer2, args=((mq),))
-
-        h1.start()
-        h2.start()
+        #h1.start()
+        #h2.start()
 
         with funciones.abrir_archivo(archivo) as file:
             file.seek(start_index)
-            leido = file.read(end_index - start_index)
-
-            mq.put(leido)
-            #armamos la cola de mensajes
-            #mensajes.append(leido)
-            #print(leido)
-
-            start_index = end_index + 1
-            end_index = start_index + bloque
-
-        # leemos de la cola
-        #print(mensajes.pop(0))
-
-        h2.join()
-        h1.join()
+            leido = file.read(bloque)
+            while leido:
+                mq.put(leido)
+                start_index = start_index + bloque
+                file.seek(start_index)
+                leido = file.read(bloque)
 
         file.close()
+
+        #time.sleep(3)
+
+        for h in range(0, nro):
+            h.join()
+
+        #h2.join()
+        #h1.join()
+
+        #print('\nterminando padre')
+
+        print('\npalabras totales: %d' % cant)
 
     except getopt.GetoptError as err:
         print(err)
