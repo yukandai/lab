@@ -10,17 +10,10 @@ import multiprocessing
 import funciones
 
 def leer(mq, cant):
-    while True:
-        msg = mq.get()
-        palabras = msg.split()
-        if (msg == 'DONE'):
-            break
-        cant += len(palabras)
-        print('palabras: ' , len(palabras), os.getpid(), cant)
-        #print('H1: TOTAL: %d' % cant)
-        #print('\n************')
-        #cant = cant + len(palabras)
-        #return cant
+    msg = mq.get()
+    palabras = msg.split()
+    cant.value += len(palabras)
+    #print('proceso: ', os.getpid(), 'contadas: ', len(palabras), 'total: ', cant.value)
 
 def main():
     try:
@@ -44,20 +37,16 @@ def main():
                 assert False, "option no válida"
 
         start_index = 0
-        cant = 0
+        procesos = []
 
         mq = multiprocessing.Queue()
+        cant = multiprocessing.Value('i', 0)
 
-        #Lanzamos n hijos
+        #Creamos n procesos
         for h in range(0, nro):
             h = multiprocessing.Process(target=leer, args=(mq, cant,))
+            procesos.append(h)
             h.start()
-
-        #h1 = multiprocessing.Process(target=leer, args=(mq, cant,))
-        #h2 = multiprocessing.Process(target=leer, args=(mq, cant,))
-
-        #h1.start()
-        #h2.start()
 
         with funciones.abrir_archivo(archivo) as file:
             file.seek(start_index)
@@ -70,17 +59,11 @@ def main():
 
         file.close()
 
-        #time.sleep(3)
-
-        for h in range(0, nro):
+        #Terminamos los procesos
+        for h in procesos:
             h.join()
 
-        #h2.join()
-        #h1.join()
-
-        #print('\nterminando padre')
-
-        print('\npalabras totales: %d' % cant)
+        print('\npalabras totales: ', cant.value)
 
     except getopt.GetoptError as err:
         print(err)
