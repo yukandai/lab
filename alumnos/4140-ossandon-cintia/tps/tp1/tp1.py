@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #encoding=utf8
 
 import os
@@ -7,13 +7,8 @@ import time
 import getopt
 import multiprocessing
 
-import funciones
-
-def leer(mq, cant):
-    msg = mq.get()
-    palabras = msg.split()
-    cant.value += len(palabras)
-    #print('proceso: ', os.getpid(), 'contadas: ', len(palabras), 'total: ', cant.value)
+#import funciones
+from funciones import leer, abrir_archivo
 
 def main():
     try:
@@ -44,11 +39,11 @@ def main():
 
         #Creamos n procesos
         for h in range(0, nro):
-            h = multiprocessing.Process(target=leer, args=(mq, cant,))
+            h = multiprocessing.Process(target=leer, args=(mq,cant,))
             procesos.append(h)
             h.start()
 
-        with funciones.abrir_archivo(archivo) as file:
+        with abrir_archivo(archivo) as file:
             file.seek(start_index)
             leido = file.read(bloque)
             while leido:
@@ -58,6 +53,8 @@ def main():
                 leido = file.read(bloque)
 
         file.close()
+        for i in procesos:
+            mq.put("chau")
 
         #Terminamos los procesos
         for h in procesos:
