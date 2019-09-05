@@ -3,7 +3,7 @@
 
 # Enunciado
 
-Fecha de entrega: 24709/2019
+Fecha de entrega: 24/09/2019
 
 
 ### Problema
