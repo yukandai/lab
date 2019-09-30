@@ -4,30 +4,38 @@ import threading
 import time
 import random
 
+def a_remar():
+    print("agarren los remos\n")
+
+def a_bordo():
+    print("subido al barco\n")
+
 def hincha_river():
     """ Implementar funcion para subir al bote ....si es que se puede ..."""
-    print("vamos river")
+    print("nuevo hincha....vamos river\n")
 
 def hincha_boca():
     """ Implementar funcion para subir al bote ....si es que se puede ..."""
-    print("vamos boca")
+    print("nuevo hincha....vamos boca\n")
 
-def barra_brava_river(viajes, lugares_bote):
+def barra_brava_river(hinchas, mutex):
     """ Generacion de hinchas de River"""
-    while viajes < 5:
-        print("nuevo hincha de river")
+    while viajes < 20:
         time.sleep(random.randrange(0, 5))
-        hr = threading.Thread(target=hincha_river)
-        lugares_bote.append(hr)
-        # todos los hilos deben ejecutar el metodo "a_bordo()" y solo uno de ellos el metodo "a_remar()"  
+        hr = threading.Thread(target=funciones.hincha_river)
         hr.start()
+        mutex.acquire()
+        #hincha_river()
+        hinchas.append(hr)
+        mutex.release()
 
-def barra_brava_boca(viajes, lugares_bote):
+def barra_brava_boca(hinchas, mutex):
     """ Generacion de hinchas de Boca"""
-    while viajes < 5:
-        print("nuevo hincha de boca")
+    while viajes < 20:
         time.sleep(random.randrange(0, 5))
-        hb = threading.Thread(target=hincha_boca)
-        lugares_bote.append(hb)
-        # todos los hilos deben ejecutar el metodo "a_bordo()" y solo uno de ellos el metodo "a_remar()"
+        hb = threading.Thread(target=funciones.hincha_boca)
         hb.start()
+        mutex.acquire()
+        #hincha_boca()
+        hinchas.append(hb)
+        mutex.release()
