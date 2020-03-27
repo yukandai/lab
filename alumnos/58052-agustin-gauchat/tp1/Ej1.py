@@ -1,7 +1,6 @@
-import requests
+def suma(n):
+    ns = int(n) + int(n + n) + int(n + n + n)
+    return ns
 
 n = input("Ingrese un numero\n")
-
-ns = int(n) + int(n + n) + int(n + n + n)
-
-print("El resultado es: ", ns)
+print("El resultado es: ", suma(n))

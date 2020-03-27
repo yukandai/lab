@@ -1,6 +1,9 @@
+# sudo apt-get install python3-matplotlib para instalar las librerias
+from matplotlib.pylab import hist, show
+
 lista = []
 n = ""
-with open("/home/agus/Computacion2/lab/tps/tp1/Numeros.txt", "r") as l:
+with open("/home/agus/Computacion2/lab/alumnos/58052-agustin-gauchat/tp1/Numeros.txt", "r") as l:
 
 
     for j in l:
@@ -12,8 +15,5 @@ with open("/home/agus/Computacion2/lab/tps/tp1/Numeros.txt", "r") as l:
                     lista.append(int(n))
                 n = ""
 
-def histograma(lis, cant = "-"):
-    for i in lis:
-        print(cant * i)
-
-histograma(lista)
+hist(lista, len(lista), (min(lista), max(lista)))
+show()
