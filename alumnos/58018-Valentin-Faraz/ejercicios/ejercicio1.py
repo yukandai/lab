@@ -1,9 +1,14 @@
-
+#!/usr/bin/python3
+import sys
 class Numero():
 
     def ingreso_por_teclado(self):
-        ingreso = input("Ingrese un numero \n")
-        return (ingreso)
+
+        if ((len(sys.argv)) > 1):
+            return (str(sys.argv[1]))
+        else:
+            print("Por defecto usa el numero 9")
+            return (str(9))
 
     def sumar(self):
         num=self.ingreso_por_teclado()
