@@ -1,7 +1,7 @@
 class Pedido:
 
     def __init__(self):
-        datos = open("/home/javi/Computacion_2/lab/tps/tp1/ejercicio4.txt", "r")
+        datos = open("/home/javi/Computacion_2/lab/alumnos/58004-Cercasi-Javier/tp1/ejercicio4.txt", "r")
         self.lista = list(datos.read())
 
     def imprimir(self):
