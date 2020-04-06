@@ -5,7 +5,6 @@ lista = []
 n = ""
 with open("/home/agus/Computacion2/lab/alumnos/58052-agustin-gauchat/tp1/Numeros.txt", "r") as l:
 
-
     for j in l:
         for i in (j + " "):
             if i != "," and i != " ":
