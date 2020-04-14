@@ -3,7 +3,7 @@ import argparse
 import sys
 import os
 parser = argparse.ArgumentParser(usage="\nAyuda: Los argumentos validos son" +
-                                 " -v(verboso) -c(Numero de hijos a crear")
+                                 " -v(verboso) -c(Numero de hijos a crear)")
 
 parser.add_argument("-c", help="Cantidad de hijos", type=int)
 parser.add_argument("-v", action="store_true", help="Verboso")
@@ -22,3 +22,8 @@ if args.v:
             print("\nPID hijo: " + str(os.getpid()) + "\nPotencia: " +
                   str(2**ex))
             print("Creados por: "+str(os.getppid()))
+            exit()      # Que el hijo termine
+
+        else:
+            # Soy el padre
+            os.wait()   # El padre espera a que terminen los hijos y no cree otro hijo ni finalice

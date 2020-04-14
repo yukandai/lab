@@ -22,7 +22,6 @@ if args.tipo == 'float':
     if args.div:
         print((args.div) / (args.y))
 
-
 if args.tipo == 'int':
     if args.suma:
         print(int(args.suma) + int(args.y))
