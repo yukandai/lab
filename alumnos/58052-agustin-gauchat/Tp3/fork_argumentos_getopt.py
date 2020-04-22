@@ -17,9 +17,9 @@ exp = args.base ** args.exponente
 if args.verboso == True:
     print("...Modo verboso...\n")
     print("Argumentos ingresados: ", args._get_kwargs())
-    
+
     pid = os.fork()
-    if pid != 0:
+    if pid == 0:
         print("PID padre:", os.getppid())
         print("Creando hijo...")
-        print("PID hijo:", os.getpid(), "potencia:", exp, "por", os.getpid())
+        print("PID hijo:", os.getpid(), "potencia:", exp, "por:", os.getpid())
