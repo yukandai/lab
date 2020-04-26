@@ -10,7 +10,7 @@ global pid2
 
 def get_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('sleep_time', nargs=1, type=int, help='Tiempo de espera')
+    parser.add_argument('sleep_time', metavar="T", nargs=1, type=int, help='Tiempo de espera')
     return parser.parse_args().sleep_time[0]
 
 
@@ -19,7 +19,7 @@ def get_number(nro, frame):
     global r
     signal.alarm(sleep_time)
     num = randint(-1000, 1000)
-    print("PID: ", os.getpid(), " Enviando ", num)
+    print("PID: ", os.getpid(), " PPID: ", os.getppid(), " Enviando ", num)
     os.write(w, str(num).encode())
     os.kill(pid2, signal.SIGUSR1)
 
@@ -29,7 +29,7 @@ def show_num(nro, frame):
     global r
     # w.close()
     num = os.read(r, 100)
-    print("PID: ", os.getpid(), " Recibido: ", int(num))
+    print("PID: ", os.getpid(), " PPID: ", os.getppid(), " Recibido: ", int(num))
     print("Esperando ", sleep_time, " segundos")
 
 
