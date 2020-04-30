@@ -32,10 +32,10 @@ def div(line, escalar):
     # return [int(x)/escalar for x in line if x.isnumeric()]
 
 
-def processline(line, operacion, escalar, output):
+def processline(line, operacion, escalar, output, output_filename="matrix_output"):
     line = operacion(line, escalar)
     if output:
-        with open("matrix_output", 'a') as m:
+        with open(output_filename, 'a') as m:
             m.write(str(line)+'\n')
     else:
         print(line)
@@ -63,28 +63,30 @@ if __name__ == '__main__':
     start_time1 = time.time()
 
     # ultimo multiprocessing
+    processes = []
     with open(args.archivo[0], 'r') as ar:
-        processes = []
         lines = ar.readlines()
-        linecount = len(lines)
-        lines_per_process = linecount // mp.cpu_count()
-        start = 0
-        end = lines_per_process
-        for _ in range(mp.cpu_count()):
-            lines_to_process = lines[start:end]
-            start += lines_per_process
-            end += lines_per_process
-            p = mp.Process(target=processlines, args=(lines_to_process, args.operacion, args.escalar[0], args.output))
-            processes.append(p)
-            p.start()
-        remaining_lines = linecount % mp.cpu_count()
-        if remaining_lines:
-            lines_to_process = lines[-remaining_lines:]
-            p = mp.Process(target=processlines, args=(lines_to_process, args.operacion, args.escalar[0], args.output))
-            p.start()
-            processes.append(p)
-        for process in processes:
-            process.join()
+    linecount = len(lines)
+    lines_per_process = linecount // mp.cpu_count()
+    start = 0
+    end = lines_per_process
+    for _ in range(mp.cpu_count()):
+        lines_to_process = lines[start:end]
+        start += lines_per_process
+        end += lines_per_process
+        p = mp.Process(target=processlines, args=(lines_to_process, args.operacion, args.escalar[0], args.output))
+        processes.append(p)
+        p.start()
+    for process in processes:
+        process.join()
+    remaining_lines_count = linecount % mp.cpu_count()
+    remaining_lines = lines[-remaining_lines_count:]
+    for line in remaining_lines:
+        p = mp.Process(target=processline, args=(line, args.operacion, args.escalar[0], args.output))
+        p.start()
+        processes.append(p)
+    for process in processes:
+        process.join()
     end_time1 = time.time()
 
     # primer multiprocessing
@@ -98,10 +100,11 @@ if __name__ == '__main__':
     #     process.join()
 
     # sin multiprocessing
-    # with open(args.archivo[0], 'r') as ar:
-    #     for line in ar.readlines():
-    #         processline(line, args.operacion, args.escalar[0], args.output)
-    # end_time2 = time.time()
+    
+    with open(args.archivo[0], 'r') as ar:
+        for line in ar.readlines():
+            processline(line, args.operacion, args.escalar[0], args.output, "no_multiproc")
+    end_time2 = time.time()
 
     print("multiprocessing: ", end_time1 - start_time1)
-    # print("normal: ", end_time2 - end_time1)
+    print("normal: ", end_time2 - end_time1)
