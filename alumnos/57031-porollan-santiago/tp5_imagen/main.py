@@ -1,5 +1,4 @@
-import argparse
-import os
+import argparse, os, time
 import multiprocessing as mp
 
 
@@ -58,6 +57,7 @@ if __name__ == '__main__':
     leido = os.read(fd, 15)
     # print("EMPIEZA: ", hex(leido[15]))
     processes = []
+    tiempo_inicial = time.time()
     for color in range(3):
         p = mp.Process(target=process_image_header, args=(args.archivo, leido, color))
         p.start()
@@ -94,3 +94,5 @@ if __name__ == '__main__':
         blue_count = parent_conn_blue.recv()
         for process in  processes:
             process.join()
+    tiempo_final = time.time()
+    print("completado en",tiempo_final - tiempo_inicial, "segundos")
