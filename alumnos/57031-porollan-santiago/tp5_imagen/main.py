@@ -12,18 +12,18 @@ def get_color(color):
 
 
 def process_image(filename, leido, color, added, count, conn):
-    newleido = []
+    newimage_arr = []
     for l in leido:
         if count == color:
             newl = l + added
             newl = 255 if newl > 255 else newl
         else:
-            newl = l        
-        newleido.append(newl)
+            newl = l
+        newimage_arr.append(newl)
         count += 1
         if count == 3:
             count = 0
-    newimage = bytes(newleido)
+    newimage = bytes(newimage_arr)
     color_str = get_color(color)
     with open(filename[:-4] + "_" + color_str + ".ppm", 'ab') as ni:
         ni.write(newimage)
