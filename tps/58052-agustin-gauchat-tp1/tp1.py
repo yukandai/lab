@@ -53,6 +53,7 @@ try:
 
 except:
     print("ERROR - Argumentos invalidos")
+    exit(2)
 
 try:
     print("El padre", os.getpid(), "esta leyendo el archivo")
@@ -79,6 +80,7 @@ try:
     print("Imagen leida correctamente")
 except:
     print("ERROR - Error al leer la imagen, verifique la direccion")
+    exit(2)
 
 time.sleep(3)
 
@@ -102,6 +104,7 @@ try:
 
 except:
     print("ERROR - No se pudieron procesar los colores")
+    exit(2)
 
 time.sleep(2)
 
@@ -112,17 +115,17 @@ try:
     imagenAzul = array.array('B', [i for i in obj.azul])
 
     #Creo las imagenes correspondientes
-    with open("FiltroRojo.ppm", "wb", os.O_CREAT) as x:
+    with open("FiltroRojo_" + args.file, "wb", os.O_CREAT) as x:
         x.write(bytearray(header, 'ascii'))
         imagenRojo.tofile(x)
         x.close()
 
-    with open("FiltroVerde.ppm", "wb", os.O_CREAT) as x:
+    with open("FiltroVerde_" + args.file, "wb", os.O_CREAT) as x:
         x.write(bytearray(header, 'ascii'))
         imagenVerde.tofile(x)
         x.close()
 
-    with open("FiltroAzul.ppm", "wb", os.O_CREAT) as x:
+    with open("FiltroAzul_" + args.file, "wb", os.O_CREAT) as x:
         x.write(bytearray(header, 'ascii'))
         imagenAzul.tofile(x)
         x.close()
@@ -131,3 +134,4 @@ try:
 
 except:
     print("ERROR - La imagen no pudo ser creada")
+    exit(2)
