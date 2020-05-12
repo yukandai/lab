@@ -15,35 +15,38 @@ def procesar_imagen(filename, color, added, conn):
     # funcion target
     # se determinan los valores a escribir en la nueva imagen
     # luego se escribe la imagen
-    try:
-        leido, count = conn.recv()
-    except KeyboardInterrupt:
-        print("\nProceso Hijo finalizado. Error con lectura de Pipe")
-        exit(1)
-    newimage_arr = []
-    for color_value in leido:
-        # escribir bytes de la nueva imagen. dependiendo del color suma el valor
-        if count == color:
-            newl = color_value * added
-            newl = 255 if newl > 255 else newl
-        else:
-            newl = 0
-        newimage_arr.append(newl)
-        count += 1
-        if count == 3:
-            count = 0
-    newimage = bytes(newimage_arr)
-    color_str = get_color(color)
-    with open(filename[:-4] + "_" + color_str + ".ppm", 'ab') as ni:
-        ni.write(newimage)
-    conn.send(count)
-    if leido:
+    while 1:
         try:
-            # se vuelve a ejecutar la misma funcion para que el proceso quede esperando
-            procesar_imagen(filename, color, added, conn)
-        except RecursionError:
-            print("Error. Buffer muy pequeño. Finalizar manualmente el programa")
+            leido, count = conn.recv()
+        except KeyboardInterrupt:
+            print("\nProceso Hijo finalizado. Error con lectura de Pipe")
             exit(1)
+        if leido == "stop":
+            break
+        newimage_arr = []
+        for color_value in leido:
+            # escribir bytes de la nueva imagen. dependiendo del color suma el valor
+            if count == color:
+                newl = color_value * added
+                newl = 255 if newl > 255 else newl
+            else:
+                newl = 0
+            newimage_arr.append(newl)
+            count += 1
+            if count == 3:
+                count = 0
+        newimage = bytes(newimage_arr)
+        color_str = get_color(color)
+        with open(filename[:-4] + "_" + color_str + ".ppm", 'ab') as ni:
+            ni.write(newimage)
+        conn.send(count)
+    #if leido:
+    #    try:
+            # se vuelve a ejecutar la misma funcion para que el proceso quede esperando
+    #        procesar_imagen(filename, color, added, conn)
+    #    except RecursionError:
+    #        print("Error. Buffer muy pequeño. Finalizar manualmente el programa")
+    #        exit(1)
 
 
 def escribir_headers(args, leido):
@@ -141,9 +144,15 @@ if __name__ == '__main__':
             exitcode = 1
             print("Error de memoria")
             continue
+        
         for color in range(3):
             # se manda lo leido
-            parent_conns[color].send((leido, counts[color]))
+            if leido:
+                parent_conns[color].send((leido, counts[color]))
+            else:
+                parent_conns[color].send(("stop", counts[color]))
+        if not leido:
+            break
         for color in range(3):
             # se recibe la variable count
             # count puede tomar valores del 0 al 2 incluido
