@@ -3,10 +3,22 @@
 import os
 import array
 import argparse
+import concurrent.futures as fut
+
+
+class InvalidFormat(Exception):
+    def __init__(self, message):
+        print(message)
+
+
+class NoFile(Exception):
+    def __init__(self, message):
+        print(message)
 
 
 # El objeto ImagenPPM tiene:
 # -path (el path directorio del archivo)
+# -size (el tamaño de la imagen)
 # -image (el string leido del archivo)
 # -header (el header de la imagen PPM)
 # -body (el cuerpo de la imagen PPM)
@@ -19,52 +31,96 @@ import argparse
 # +intensity(intensity) (cambia el valor del filtro con un porcentaje)
 # +write(path, name) (escribe la imagen en un archivo)
 class ImagePPM():
-    def __init__(self, path, name):
+    def __init__(self, path, name, bloq=0):
+
+        # error si no se ingresa una imagen
+        if not name:
+            raise NoFile("No file entered")
+
+        # error si el tamaño de bloque es negativo
+        if bloq < 0:
+            raise ValueError(
+                    "Negative values for the read block size are invalid"
+                    )
+
+        # error si la imagen no es .ppm
+        if not name.endswith(".ppm"):
+            raise InvalidFormat("image is an invalid format")
 
         self.path = path
 
-        # size = os.path.getsize(path + "7o.ppm")
-        archivo = open(self.path + name, "rb")
-        self.image = archivo.read()
+        # leo la imagen
+        self.size = os.path.getsize(path + name)
+        with open(self.path + name, "rb") as archivo:
+            if bloq == 0:
+                self.image = archivo.read()
+            else:
+                self.image = b""
+                for num in range(round(self.size/bloq + 0.5)):
+                    self.image += archivo.read(bloq)
 
-        # borro los comentarios de la self.image
-        for num in range(self.image.count(b"\n# ")):
-            commentS = self.image.find(b"\n# ")
-            commentE = self.image.find(b"\n", commentS + 1)
-            self.image = self.image.replace(self.image[commentS:commentE], b"")
+        # busco el header de la imagen
+        cont = 0
+        whitespace = 0
+        for num in range(len(self.image)):
+            item = self.image[num]
 
-        # encuentro el tercer \n que es el que delimita al header de la imagen
-        return_1 = self.image.find(b"\n") + 1
+            if chr(item) == "\n":
+                whitespace += 1
+            elif chr(item) == "#":
+                whitespace -= 1
 
-        return_2 = self.image.find(b"\n", return_1) + 1
-
-        header_end = self.image.find(b"\n", return_2) + 1
+            if whitespace == 3:
+                cont += 1
+            if cont == 2:
+                self.header = self.image[:num]
+                break
 
         # separo el header de el resto de la imagen
-        self.header = self.image[:header_end].decode()
-        self.body = self.image[header_end:]
+        self.body = self.image.replace(self.header, b"")
+        self.header = self.header.decode()
 
         # creo una lista con los pixeles como ints
         self.imageList = [i for i in self.body]
 
-        # print(self.imageList)
-
 
 class ColorChannel():
     def __init__(self, color, imageList, header, intensity=1):
-        self.header = header
 
+        # print(os.getpid())
+
+        # error si la intensidad es negativa
+        if intensity < 0:
+            raise ValueError("Negative values for color intensity are invalid")
+
+        # asigno el header y el valor maximo de color de los pixels
+        self.header = header
+        self.max_c = int(self.header.split()[-1])
+
+        # inicializo la lista de valores de los colores como una lista de 0
         self.filterImage = [0 for i in imageList]
 
+        # asigno el valor de la imagen solamente
+        # en las posiciones del color indicado
         for i in range(color, len(imageList), 3):
             self.filterImage[i] = imageList[i]
 
-        self.customFilterImage = [int(i * intensity) for i in self.filterImage]
+        # creo la imagen de intensidad cambiada
+        self.customFilterImage = [int(i * intensity)
+                                  if i * intensity <= self.max_c
+                                  else self.max_c
+                                  for i in self.filterImage]
 
+    # metodo para volver a cambiar la intensidad si es necesario
     def intensity(self, intensity):
-        self.customFilterImage = [int(i * intensity) for i in self.filterImage]
+        self.customFilterImage = [int(i * intensity)
+                                  if i * intensity <= self.max_c
+                                  else self.max_c
+                                  for i in self.filterImage]
+
         return self.customFilterImage
 
+    # metodo que escribe la imagen en un archivo
     def write(self, path, name):
         image = array.array('B', self.customFilterImage)
 
@@ -73,39 +129,86 @@ class ColorChannel():
             image.tofile(x)
 
 
-if __name__ == "__main__":
+# metodo para juntar imagenes a un solo archivo
+def joinImages(path, name, header, *args):
+    # determino el valor de color maximo
+    max_c = int(header.split()[-1])
 
+    # verifico que todas las imagenes son del mismo tamaño
+    for item in args:
+        if len(item) != len(args[0]):
+            raise Exception
+
+    # sumo los colores de todas las imagenes para cada pixel
+    # si la suma es mayor al valor maximo de color se le asigna el valor maximo
+    combination = [sum(i) if sum(i) <= max_c else max_c for i in zip(*args)]
+
+    # escribo la nueva imagen en un archivo
+    image = array.array('B', combination)
+
+    with open(path + name, "wb", os.O_CREAT) as x:
+        x.write(bytearray(header, 'ascii'))
+        image.tofile(x)
+
+
+# metodo para los procesos hijos
+def child_process(path, name, color, imageList, header, intensity):
+
+    # creo un canal de color
+    channel = ColorChannel(color, imageList, header, intensity)
+
+    # escribo el canal en un archivo
+    channel.write(path, name)
+
+    return channel.customFilterImage
+
+
+# main del programa
+def main():
+
+    # argumentos
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-f", "--fileppm", help="ppm file you want to open")
-    parser.add_argument("-n", "--bloque", type=int, help="byte block size")
-    parser.add_argument("-r", "--red", type=float, help="intensity of the red channel")
-    parser.add_argument("-g", "--green", type=float, help="intensity of the green channel")
-    parser.add_argument("-b", "--blue", type=float, help="intensity of the blue channel")
+    parser.add_argument("-n", "--bloque", type=int, default=0,
+                        help="byte block size")
+    parser.add_argument("-r", "--red", type=float, default=1,
+                        help="intensity of the red channel")
+    parser.add_argument("-g", "--green", type=float, default=1,
+                        help="intensity of the green channel")
+    parser.add_argument("-b", "--blue", type=float, default=1,
+                        help="intensity of the blue channel")
 
     args = parser.parse_args()
 
     path = __file__.replace("TP.py", "")
     name = args.fileppm
 
-    i = ImagePPM(path, name)
+    # instancio la clase image con la imagen que se ingreso por argumento
+    i = ImagePPM(path, name, args.bloque)
 
-    pids = []
+    # creo los procesos hijos para que separen los tres canales de color
+    with fut.ProcessPoolExecutor() as colores:
 
-    for num in range(3):
-        pids.append(os.fork())
-        if pids[num] == 0:
-            break
+        r = colores.submit(child_process, path, "red_output.ppm",
+                           0, i.imageList, i.header, args.red
+                           )
 
-    if 0 in pids:
+        g = colores.submit(child_process, path, "green_output.ppm",
+                           1, i.imageList, i.header, args.green
+                           )
 
-        if len(pids) == 1:
-            intensity = args.red
-        elif len(pids) == 2:
-            intensity = args.green
-        else:
-            intensity = args.blue
+        b = colores.submit(child_process, path, "blue_output.ppm",
+                           2, i.imageList, i.header, args.blue
+                           )
 
-        color = ColorChannel(len(pids) - 1, i.imageList, i.header, intensity)
+    # junto las imagenes
+    joinImages(path, "final_output.ppm", i.header,
+               r.result(), g.result(), b.result())
 
-        color.write(path, str(os.getpid()) + "output.ppm")
+    # anuncio que termino de procesar la imagen
+    print("termine")
+
+
+if __name__ == "__main__":
+    main()
