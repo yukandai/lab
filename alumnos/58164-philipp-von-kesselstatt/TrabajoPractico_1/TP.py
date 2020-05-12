@@ -1,9 +1,10 @@
-#!/bin/python3
+#!/usr/bin/python3
 
 import os
 import array
 import argparse
 import concurrent.futures as fut
+import matplotlib.pyplot as plot
 
 
 class InvalidFormat(Exception):
@@ -163,6 +164,17 @@ def child_process(path, name, color, imageList, header, intensity):
     return channel.customFilterImage
 
 
+def histograma(r, g, b):
+    threeColors = []
+    for color, num in zip([r, g, b], range(3)):
+        lista = []
+        for i in range(num, len(color), 3):
+            lista.append(color[i])
+        threeColors.append(lista)
+    plot.hist(threeColors, color=["red", "green", "blue"])
+    plot.show()
+
+
 # main del programa
 def main():
 
@@ -205,6 +217,8 @@ def main():
     # junto las imagenes
     joinImages(path, "final_output.ppm", i.header,
                r.result(), g.result(), b.result())
+
+    histograma(r.result(), g.result(), b.result())
 
     # anuncio que termino de procesar la imagen
     print("termine")
