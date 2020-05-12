@@ -24,10 +24,10 @@ def procesar_imagen(filename, color, added, conn):
     for color_value in leido:
         # escribir bytes de la nueva imagen. dependiendo del color suma el valor
         if count == color:
-            newl = color_value + added
+            newl = color_value * added
             newl = 255 if newl > 255 else newl
         else:
-            newl = color_value
+            newl = 0
         newimage_arr.append(newl)
         count += 1
         if count == 3:
