@@ -134,6 +134,7 @@ def separador(q, primer, segundo, tercero, nombre):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(usage="\ntp1.py [-h] [-r RED] [-g GREEN] [-b BLUE] -s SIZE -f FILE")
+    
     parser.add_argument('-r', '--red', metavar='RED', type=float,
                         help="Escala para rojo", default=1)
     parser.add_argument('-g', '--green', metavar='GREEN', type=float,
@@ -144,9 +145,8 @@ if __name__ == '__main__':
                         default=1024, help="Bloque de lectura")
     parser.add_argument('-f', '--file', metavar='FILE', type=str,
                         help="archivo a procesar")
-
     args = parser.parse_args()
-
+    args.size += 10
     # Defino 3 colas por separado, y defino la funcion y argumentos a ejecutar
     # por cada proceso hijo
 
