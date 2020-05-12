@@ -146,7 +146,7 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file', metavar='FILE', type=str,
                         help="archivo a procesar")
     args = parser.parse_args()
-    args.size += 10
+    #args.size += 10
     # Defino 3 colas por separado, y defino la funcion y argumentos a ejecutar
     # por cada proceso hijo
 
