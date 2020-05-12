@@ -68,6 +68,21 @@ def get_arguments():
     return parser.parse_args()
 
 
+def get_sb(filename):
+    vl = 0
+    ignore_line = 0
+    for idx, val in enumerate(open(filename, 'rb').read()):
+        if vl == 3:
+            return idx
+        if val == 35:
+            ignore_line = 1
+        elif ignore_line and val == 10:
+            ignore_line = 0
+        elif not ignore_line and val == 10:
+            vl += 1
+    return 15
+
+
 if __name__ == '__main__':
     args = get_arguments()
     try:
@@ -86,7 +101,7 @@ if __name__ == '__main__':
     # escribir header
     tiempo_inicial = time.time()
     if not exitcode:
-        leido = os.read(fd, 15)        
+        leido = os.read(fd, get_sb(args.archivo))
         exitcode = escribir_headers(args, leido)
     # escribir el resto
     colors = [args.red[0], args.green[0], args.blue[0]]
@@ -94,8 +109,8 @@ if __name__ == '__main__':
     processes = []
     for color in range(3):
         p = mp.Process(target=procesar_imagen,
-                        args=(args.archivo, color, colors[color],
-                                child_conns[color]))
+                       args=(args.archivo, color, colors[color],
+                             child_conns[color]))
         p.start()
         processes.append(p)
     while not exitcode and leido:
