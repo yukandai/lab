@@ -12,6 +12,9 @@ def get_color(color):
 
 
 def procesar_imagen(filename, color, added, conn):
+    # funcion target
+    # se determinan los valores a escribir en la nueva imagen
+    # luego se escribe la imagen
     try:
         leido, count = conn.recv()
     except KeyboardInterrupt:
@@ -19,6 +22,7 @@ def procesar_imagen(filename, color, added, conn):
         exit(1)
     newimage_arr = []
     for color_value in leido:
+        # escribir bytes de la nueva imagen. dependiendo del color suma el valor
         if count == color:
             newl = color_value + added
             newl = 255 if newl > 255 else newl
@@ -35,6 +39,7 @@ def procesar_imagen(filename, color, added, conn):
     conn.send(count)
     if leido:
         try:
+            # se vuelve a ejecutar la misma funcion para que el proceso quede esperando
             procesar_imagen(filename, color, added, conn)
         except RecursionError:
             print("Error. Buffer muy pequeño. Finalizar manualmente el programa")
@@ -42,6 +47,7 @@ def procesar_imagen(filename, color, added, conn):
 
 
 def escribir_headers(args, leido):
+    # genera 3 procesos. se crean los archivos con sus headers para cada color
     processes = []
     exitcode = 0
     for color in range(3):
@@ -56,12 +62,13 @@ def escribir_headers(args, leido):
 
 
 def escribir_header(filename, leido, color):
+    # genera archivo segun el color con el header determinado
     with open(filename[:-4] + "_" + get_color(color) + ".ppm", 'wb') as ni:
         ni.write(bytes(list(leido)))
 
 
 def get_arguments():
-    parser = argparse.ArgumentParser(description="Procesar imagen")
+    parser = argparse.ArgumentParser(description="Procesar imagen. Generar 3 filtros de color")
     parser.add_argument("-f", dest="archivo", type=str,
                         help="Nombre de la imagen formato ppm", required=True)
     parser.add_argument("-n", dest="tam", type=int, metavar="SIZE",
@@ -77,17 +84,18 @@ def get_arguments():
 
 
 def get_sb(filename):
-    vl = 0
+    # cuenta las lineas validas. cuando obtiene 3 devuelve el indice del byte
+    validlines = 0
     ignore_line = 0
     for idx, val in enumerate(open(filename, 'rb').read()):
-        if vl == 3:
+        if validlines == 3:
             return idx
         if val == 35:
             ignore_line = 1
         elif ignore_line and val == 10:
             ignore_line = 0
         elif not ignore_line and val == 10:
-            vl += 1
+            validlines += 1
     return 15
 
 
@@ -111,17 +119,22 @@ if __name__ == '__main__':
     if not exitcode:
         leido = os.read(fd, get_sb(args.archivo))
         exitcode = escribir_headers(args, leido)
+
     # escribir el resto
     colors = [args.red[0], args.green[0], args.blue[0]]
     counts = [0, 0, 0]
     processes = []
+
     for color in range(3):
+        # se generan 3 procesos que quedan esperando recibir informacion
         p = mp.Process(target=procesar_imagen,
                        args=(args.archivo, color, colors[color],
                              child_conns[color]))
         p.start()
         processes.append(p)
+
     while not exitcode and leido:
+        # se lee el archivo y se mandan los datos a los hijos
         try:
             leido = os.read(fd, args.tam)
         except MemoryError:
@@ -129,20 +142,27 @@ if __name__ == '__main__':
             print("Error de memoria")
             continue
         for color in range(3):
+            # se manda lo leido
             parent_conns[color].send((leido, counts[color]))
         for color in range(3):
+            # se recibe la variable count
+            # count puede tomar valores del 0 al 2 incluido
+            # representa el ultimo color escrito por cada hijo
             try:
                 counts[color] = parent_conns[color].recv()
             except KeyboardInterrupt:
                 print("\nProceso Padre finalizado. Error con lectura de Pipe")
                 exit(1)
     for process in processes:
+        # se espera a que terminen los hijos
         try:
             process.join()
         except KeyboardInterrupt:
             print("\nContinuando proceso Padre")
             exitcode = 1
         exitcode = exitcode or process.exitcode
+
+    # se muestra por pantalla informacion de la ejecucion
     tiempo_final = time.time()
     if not exitcode:
         print("Se generaron correctamente los 3 filtros")
