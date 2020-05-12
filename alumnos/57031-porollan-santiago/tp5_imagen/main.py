@@ -12,7 +12,11 @@ def get_color(color):
 
 
 def procesar_imagen(filename, color, added, conn):
-    leido, count = conn.recv()
+    try:
+        leido, count = conn.recv()
+    except KeyboardInterrupt:
+        print("\nProceso Hijo finalizado. Error con lectura de Pipe")
+        exit(1)
     newimage_arr = []
     for color_value in leido:
         if count == color:
@@ -30,7 +34,11 @@ def procesar_imagen(filename, color, added, conn):
         ni.write(newimage)
     conn.send(count)
     if leido:
-        procesar_imagen(filename, color, added, conn)
+        try:
+            procesar_imagen(filename, color, added, conn)
+        except RecursionError:
+            print("Error. Buffer muy pequeño. Finalizar manualmente el programa")
+            exit(1)
 
 
 def escribir_headers(args, leido):
@@ -89,7 +97,7 @@ if __name__ == '__main__':
         fd = os.open(args.archivo, os.O_RDONLY)
     except FileNotFoundError:
         exitcode = 1
-        print("No se ha encontrado el archivo")
+        print("No se ha encontrado el archivo. Finalizar manualmente el programa")
     else:
         exitcode = 0
     child_conns = [None, None, None]
@@ -123,9 +131,17 @@ if __name__ == '__main__':
         for color in range(3):
             parent_conns[color].send((leido, counts[color]))
         for color in range(3):
-            counts[color] = parent_conns[color].recv()
+            try:
+                counts[color] = parent_conns[color].recv()
+            except KeyboardInterrupt:
+                print("\nProceso Padre finalizado. Error con lectura de Pipe")
+                exit(1)
     for process in processes:
-        process.join()
+        try:
+            process.join()
+        except KeyboardInterrupt:
+            print("\nContinuando proceso Padre")
+            exitcode = 1
         exitcode = exitcode or process.exitcode
     tiempo_final = time.time()
     if not exitcode:
