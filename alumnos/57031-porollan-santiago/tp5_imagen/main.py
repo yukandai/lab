@@ -32,6 +32,7 @@ def procesar_imagen(filename, leido, color, added, count, conn):
 
 def escribir_headers(args, leido):
     processes = []
+    exitcode = 0
     for color in range(3):
         p = mp.Process(target=escribir_header, args=(args.archivo,
                                                      leido, color))
@@ -39,6 +40,8 @@ def escribir_headers(args, leido):
         processes.append(p)
     for process in processes:
         process.join()
+        exitcode = exitcode or process.exitcode
+    return exitcode
 
 
 def escribir_header(filename, leido, color):
@@ -53,18 +56,24 @@ def get_arguments():
     parser.add_argument("-n", dest="tam", type=int, metavar="SIZE",
                         required=True, help="Tamaño del bloque de bytes",
                         default=256)
-    parser.add_argument("-r", dest="red", type=int, metavar="RED",
+    parser.add_argument("-r", dest="red", type=int, default=[25], metavar="RED",
                         nargs=1, help="Valor color rojo")
-    parser.add_argument("-g", dest="green", type=int, metavar="GREEN",
+    parser.add_argument("-g", dest="green", type=int, default=[25], metavar="GREEN",
                         nargs=1, help="Valor color verde")
-    parser.add_argument("-b", dest="blue", type=int, metavar="BLUE",
+    parser.add_argument("-b", dest="blue", type=int, default=[25], metavar="BLUE",
                         nargs=1, help="Valor color azul")
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = get_arguments()
-    fd = os.open(args.archivo, os.O_RDONLY)
+    try:
+        fd = os.open(args.archivo, os.O_RDONLY)
+    except FileNotFoundError:
+        exitcode = 1
+        print("No se ha encontrado el archivo")
+    else:
+        exitcode = 0
     child_conns = [None, None, None]
     parent_conns = [None, None, None]
     parent_conns[0], child_conns[0] = mp.Pipe()
@@ -72,14 +81,20 @@ if __name__ == '__main__':
     parent_conns[2], child_conns[2] = mp.Pipe()
 
     # escribir header
-    leido = os.read(fd, 15)
     tiempo_inicial = time.time()
-    escribir_headers(args, leido)
+    if not exitcode:
+        leido = os.read(fd, 15)        
+        exitcode = escribir_headers(args, leido)
     # escribir el resto
     colors = [args.red[0], args.green[0], args.blue[0]]
     counts = [0, 0, 0]
-    while leido:
-        leido = os.read(fd, args.tam)
+    while not exitcode and leido:
+        try:
+            leido = os.read(fd, args.tam)
+        except MemoryError:
+            exitcode = 1
+            print("Error de memoria")
+            continue
         processes = []
         for color in range(3):
             p = mp.Process(target=procesar_imagen,
@@ -91,5 +106,10 @@ if __name__ == '__main__':
             counts[color] = parent_conns[color].recv()
         for process in processes:
             process.join()
+            exitcode = exitcode or process.exitcode
     tiempo_final = time.time()
-    print("completado en", tiempo_final - tiempo_inicial, "segundos")
+    if not exitcode:
+        print("Se generaron correctamente los 3 filtros")
+    else:
+        print("Ha ocurrido un error")
+    print("Completado en", tiempo_final - tiempo_inicial, "segundos")
