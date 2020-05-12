@@ -11,14 +11,14 @@ def get_color(color):
         return "blue"
 
 
-def process_image(filename, leido, color, added, count, conn):
+def procesar_imagen(filename, leido, color, added, count, conn):
     newimage_arr = []
-    for l in leido:
+    for color_value in leido:
         if count == color:
-            newl = l + added
+            newl = color_value + added
             newl = 255 if newl > 255 else newl
         else:
-            newl = l
+            newl = color_value
         newimage_arr.append(newl)
         count += 1
         if count == 3:
@@ -30,69 +30,66 @@ def process_image(filename, leido, color, added, count, conn):
     conn.send(count)
 
 
-def process_image_header(filename, leido, color):
-    newleido = []
-    for l in leido:
-        newl = l
-        newleido.append(newl)
-    newimage = bytes(newleido)
-    color_str = get_color(color)
-    with open(filename[:-4] + "_" + color_str + ".ppm", 'wb') as ni:
-        ni.write(newimage)
+def escribir_headers(args, leido):
+    processes = []
+    for color in range(3):
+        p = mp.Process(target=escribir_header, args=(args.archivo,
+                                                     leido, color))
+        p.start()
+        processes.append(p)
+    for process in processes:
+        process.join()
+
+
+def escribir_header(filename, leido, color):
+    with open(filename[:-4] + "_" + get_color(color) + ".ppm", 'wb') as ni:
+        ni.write(bytes(list(leido)))
+
+
+def get_arguments():
+    parser = argparse.ArgumentParser(description="Procesar imagen")
+    parser.add_argument("-f", dest="archivo", type=str,
+                        help="Nombre de la imagen formato ppm", required=True)
+    parser.add_argument("-n", dest="tam", type=int, metavar="SIZE",
+                        required=True, help="Tamaño del bloque de bytes",
+                        default=256)
+    parser.add_argument("-r", dest="red", type=int, metavar="RED",
+                        nargs=1, help="Valor color rojo")
+    parser.add_argument("-g", dest="green", type=int, metavar="GREEN",
+                        nargs=1, help="Valor color verde")
+    parser.add_argument("-b", dest="blue", type=int, metavar="BLUE",
+                        nargs=1, help="Valor color azul")
+    return parser.parse_args()
+
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Procesar imagen")
-    parser.add_argument("-f", dest="archivo", type=str, help="Nombre de la imagen formato ppm", required=True)
-    parser.add_argument("-n", dest="tam", type=int, help="Tamaño del bloque de bytes", default=256)
-    parser.add_argument("-r", dest="red", type=int, metavar="RED", nargs=1, required=True, help="Color rojo")
-    parser.add_argument("-g", dest="green", type=int, metavar="GREEN", nargs=1, required=True, help="Color verde")
-    parser.add_argument("-b", dest="blue", type=int, metavar="BLUE", nargs=1, required=True, help="Color azul")
-    args = parser.parse_args()
+    args = get_arguments()
     fd = os.open(args.archivo, os.O_RDONLY)
-    parent_conn_red, child_conn_red = mp.Pipe()
-    parent_conn_green, child_conn_green = mp.Pipe()
-    parent_conn_blue, child_conn_blue = mp.Pipe()
+    child_conns = [None, None, None]
+    parent_conns = [None, None, None]
+    parent_conns[0], child_conns[0] = mp.Pipe()
+    parent_conns[1], child_conns[1] = mp.Pipe()
+    parent_conns[2], child_conns[2] = mp.Pipe()
 
     # escribir header
     leido = os.read(fd, 15)
-    # print("EMPIEZA: ", hex(leido[15]))
-    processes = []
     tiempo_inicial = time.time()
-    for color in range(3):
-        p = mp.Process(target=process_image_header, args=(args.archivo, leido, color))
-        p.start()
-        processes.append(p)
-    for process in  processes:
-        process.join()
-
+    escribir_headers(args, leido)
     # escribir el resto
-    red_count = 0
-    green_count = 0
-    blue_count = 0
+    colors = [args.red[0], args.green[0], args.blue[0]]
+    counts = [0, 0, 0]
     while leido:
         leido = os.read(fd, args.tam)
         processes = []
         for color in range(3):
-            if color == 0:
-                added = args.red[0]
-                count = red_count
-                child_conn = child_conn_red
-            elif color == 1:
-                added = args.green[0]
-                count = green_count
-                child_conn = child_conn_green
-            elif color == 2:
-                added = args.blue[0]
-                count = blue_count
-                child_conn = child_conn_blue
-            p = mp.Process(target=process_image, args=(args.archivo, leido, color,
-                                                       added, count, child_conn))
+            p = mp.Process(target=procesar_imagen,
+                           args=(args.archivo, leido, color, colors[color],
+                                 counts[color], child_conns[color]))
             p.start()
             processes.append(p)
-        red_count = parent_conn_red.recv()
-        green_count = parent_conn_green.recv()
-        blue_count = parent_conn_blue.recv()
-        for process in  processes:
+        for color in range(3):
+            counts[color] = parent_conns[color].recv()
+        for process in processes:
             process.join()
     tiempo_final = time.time()
-    print("completado en",tiempo_final - tiempo_inicial, "segundos")
+    print("completado en", tiempo_final - tiempo_inicial, "segundos")
