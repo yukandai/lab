@@ -11,7 +11,8 @@ def get_color(color):
         return "blue"
 
 
-def procesar_imagen(filename, leido, color, added, count, conn):
+def procesar_imagen(filename, color, added, conn):
+    leido, count = conn.recv()
     newimage_arr = []
     for color_value in leido:
         if count == color:
@@ -28,6 +29,8 @@ def procesar_imagen(filename, leido, color, added, count, conn):
     with open(filename[:-4] + "_" + color_str + ".ppm", 'ab') as ni:
         ni.write(newimage)
     conn.send(count)
+    if leido:
+        procesar_imagen(filename, color, added, conn)
 
 
 def escribir_headers(args, leido):
@@ -88,6 +91,13 @@ if __name__ == '__main__':
     # escribir el resto
     colors = [args.red[0], args.green[0], args.blue[0]]
     counts = [0, 0, 0]
+    processes = []
+    for color in range(3):
+        p = mp.Process(target=procesar_imagen,
+                        args=(args.archivo, color, colors[color],
+                                child_conns[color]))
+        p.start()
+        processes.append(p)
     while not exitcode and leido:
         try:
             leido = os.read(fd, args.tam)
@@ -95,18 +105,13 @@ if __name__ == '__main__':
             exitcode = 1
             print("Error de memoria")
             continue
-        processes = []
         for color in range(3):
-            p = mp.Process(target=procesar_imagen,
-                           args=(args.archivo, leido, color, colors[color],
-                                 counts[color], child_conns[color]))
-            p.start()
-            processes.append(p)
+            parent_conns[color].send((leido, counts[color]))
         for color in range(3):
             counts[color] = parent_conns[color].recv()
-        for process in processes:
-            process.join()
-            exitcode = exitcode or process.exitcode
+    for process in processes:
+        process.join()
+        exitcode = exitcode or process.exitcode
     tiempo_final = time.time()
     if not exitcode:
         print("Se generaron correctamente los 3 filtros")
