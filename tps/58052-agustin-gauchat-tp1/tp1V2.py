@@ -31,7 +31,7 @@ try:
     time.sleep(2)
 
     #Abro la imagen y la leo
-    imagen = open("dog.ppm", "rb").read()
+    imagen = open(args.file, "rb").read()
 
     #Fuera comentarios
     for num in range(imagen.count(b"\n# ")):
