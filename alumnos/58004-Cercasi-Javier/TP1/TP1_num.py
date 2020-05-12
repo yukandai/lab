@@ -76,11 +76,7 @@ def separador(q, primer, segundo, tercero, nombre):
 
     path = __file__.replace(sys.argv[0], "")
 
-    try:
-        fichero = open(path + nombre, 'w')
-    except IOError:
-        print("\nNo se puede encontrar la ruta del archivo de escritura\n")
-        exit()
+    fichero = open(path + nombre, 'w')
 
     # Escribo en el archivo primero el encabezado
     encabezado = q.get()
