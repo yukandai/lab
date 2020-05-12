@@ -3,15 +3,15 @@ import multiprocessing as mp
 import time
 
 
-def lector(q):
+def lector(cola):
     print("Hijo iniciado\n")
     while True:
 
         if not cola.empty():
             leido = cola.get()
             leido = leido.replace("\n", "")
-            if leido == '':
-                break
+            #if leido == '':
+            #    break
             print ("Leyendo: " + leido[::-1].upper())
 
 
@@ -28,6 +28,6 @@ if __name__ == '__main__':
     with open(args.f, 'r') as f:
         print("\nEscribiendo...")
         for linea in f:
-            time.sleep(1)
+            #time.sleep(1)
             cola.put(linea)
     f.close()

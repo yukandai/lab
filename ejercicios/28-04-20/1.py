@@ -1,21 +1,3 @@
-'''
-1- Escriba un programa que lea un archivo definido por argumento y le 
-envie cada linea a un hijo, este invertira y pasara a mayuscula lo que se le
-envie, luego se lo reenviara transformado al padre quien lo mostrara por
-pantalla. La comunicacion se hara mediante pipe
-
-Ej de funcionamiento
-
-$ python3 ej1.py -f pasar.txt
-
-Escribiendo...
-Hijo iniciado
-
-ALOH
-ETNEG
-ED
-UPMOC'''
-
 import argparse
 import os
 import time
@@ -33,7 +15,7 @@ if pid1 == 0:
     os.close(pipe_w)
     print("Hijo iniciado\n")
     while True:
-        leido = os.read(pipe_r, 15).encode()
+        leido = os.read(pipe_r, 15)
         leido = leido.replace("\n", "")
         if leido == '':
             break
