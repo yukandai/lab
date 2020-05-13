@@ -26,7 +26,7 @@ def procesar_datos(q,id,encabezado,intensidad): #Proceso los datos y los genero
     fd=os.open(nombre, os.O_WRONLY | os.O_CREAT)#genero el fd de cada color
     while True:
 
-        if not q.empty():
+        if not q.empty():#si la cola no se encuentra vacia 
             imagen=q.get() #leo el mensaje de la cola
             if(imagen=="EOF"):#si ya lei todo el mensaje salgo del bucle
                 break         
@@ -70,7 +70,7 @@ def main():
     size =(args.size)
     archivo = os.open(args.file, os.O_RDONLY) #ABRO ARCHIVO
     imagen = os.read(archivo, size)#LEO ARCHIVO
-    # print(imagen)
+    #print(imagen)
     offset=calcular_posicion(imagen)#POSICION ANTES DEL LA IMAGEN (DEPSUES DEL ENCABEZADO)
     encabezado=imagen[:offset]
     encabezado=encabezado.replace(b'P6',b'P3')
@@ -82,7 +82,7 @@ def main():
     for i in range(3):
         colas.append(Queue())
         colas[i].put(encabezado)
-    idq=0
+    idq=0 #ID de cola 
 
     #Creo 3 hijos uno por cada color
     procesos=[]
@@ -93,7 +93,7 @@ def main():
             intensidad=args.blue
         else:
             intensidad=args.green
-        procesos.append(Process(target=procesar_datos,args=(colas[i],i,encabezado,intensidad)))#Guardo un nuevo proceso
+        procesos.append(Process(target=procesar_datos,args=(colas[i],i,encabezado,intensidad)))#Guardo un nuevo proceso con la funcion que tiene que hacer y sus argumentos
         procesos[i].start()
 
     #Leo imagen completa y paso a enteros 
