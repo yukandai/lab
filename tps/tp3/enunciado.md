@@ -16,7 +16,7 @@ En caso que no se solicite ningún documento, se debe responder con un archivo i
 
 Tambien será posible aplicar filtros a archivos de imágen de tipo portátil pixmap (ppm). En ese caso se debe agregar al método GET solicitando el archivo una query indicando el filtro a solicitar. Los filtros disponibles son Red, Green, Blue y Black/White. A cada uno de estos filtros se les puede ajustar adicionalmente la escala de intensidad  (1 no la modifica)
 
-En caso se solicitar un filtro, se debe implementar con un nuevo hilo, quedando el hilo principal a la espera del mismo. Se aclara que los archivos de filtros generados NO deben escribirse en el sistema de archivos, para evitar llenar el disco y disminuir la velocidad de respuesta con entrada/salida.
+En caso se solicitar un filtro, se debe implementar creando los hilos necesarios (en funcion de -s), quedando el hilo principal a la espera de que terminen los mismos. Se aclara que la respuesta con los filtros generados NO deben escribirse en el sistema de archivos, para evitar llenar el disco y disminuir la velocidad de respuesta con entrada/salida.
 
 
 
@@ -56,6 +56,7 @@ consultas:
 
 wget http://192.168.2.2:5000/index.html
 wget http://192.168.2.2:5000/imagen.jpg
+wget http://192.168.2.2:5000/enunciado.pdf
 wget http://192.168.2.2:5000/dog.ppm?filter=W&scale=1.2
 
 ### Objetivos
