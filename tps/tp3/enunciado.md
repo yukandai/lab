@@ -24,7 +24,7 @@ En caso se solicitar un filtro, se debe implementar creando los hilos necesarios
 
 * La aplicación debe contener como mínimo 3 funciones.
 * Debe implementar el método de requerimiento GET al menos.
-* Debe devolver como mínimo, tres tipos de resultados al cliente: 200 Ok, 404 Not Found y 500 Internal Server Error (Ver especificación de HTTP 1.1).
+* Debe devolver como mínimo, tres tipos de resultados al cliente: 200 Ok, 404 Not Found y 500 Internal Server Error (Ver especificación de HTTP 1.1) con los headers de respuesta Content-Length y Content-Type correspondientes.
 * Debe soportar archivos de tipo html, jpg, pdf y ppm.
 * La lectura de los archivos se debe hacer como máximo de a n bytes.
 * Debe procesar las opciones con getopt (agregar una opcion de ayuda) o con argparse.
